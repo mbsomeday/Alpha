@@ -72,7 +72,7 @@ def crop_image(name, label, min_size, max_size, image_dir):
         h = y2 - y1
         if w > min_size and h > min_size and w < max_size and h < max_size:
             name_contents = name.split('.')
-            crop_image_name = name_contents[0] + '_' + str(label['id']) + '.' + name_contents[1]
+            crop_image_name = name_contents[0] + '_' + str(label['id']) + '.' + name_contents[1]    # 有label_id可以保证name不重复
             crop_people(name, crop_box=crop_bbox, image_dir=image_dir, crop_image_name=crop_image_name)
 
             return True

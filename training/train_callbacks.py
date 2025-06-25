@@ -156,7 +156,7 @@ class Model_Logger():
 
     def __call__(self, epoch, training_info, val_info):
         train_msg = 'Train: ' + self.get_print_msg(info_dict=training_info)
-        val_msg = 'Test: ' + self.get_print_msg(info_dict=val_info)
+        val_msg = 'Val: ' + self.get_print_msg(info_dict=val_info)
         with open(self.txt_path, 'a') as f:
             f.write(f'------------------------------ Epoch: {epoch} ------------------------------\n')
             f.write(train_msg)

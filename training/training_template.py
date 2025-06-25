@@ -278,7 +278,7 @@ class Ped_Classifier():
             info = '_' + ds_name
             self.callback_save_dir += info
         if self.opts.beta > 0.0:
-            self.callback_save_dir += '_' + str(self.opts.rand_seed) + '_' + str(self.opts.beta) + self.opts.operator.lower() +'Loss'
+            self.callback_save_dir += '_' + str(self.opts.rand_seed) + '_' + str(self.opts.beta) + self.opts.operator.lower() + 'Loss'
         else:
             self.callback_save_dir += '_' + str(self.opts.rand_seed) + '_Baseline'
         self.callback_save_path = os.path.join(os.getcwd(), self.callback_save_dir)
@@ -494,6 +494,7 @@ class Ped_Classifier():
         nonPed_acc_num = 0
         ped_acc_num = 0
         val_correct_num = 0
+        val_loss = 0
 
         # self.val_nonPed_num, self.val_ped_num = self.val_dataset.get_ped_cls_num()
 
@@ -504,6 +505,7 @@ class Ped_Classifier():
 
                 logits = self.ped_model(images)
                 preds = torch.argmax(logits, dim=1)
+                val_loss += self.loss_fn(logits, ped_labels)
 
                 y_true.extend(ped_labels.cpu().numpy())
                 y_pred.extend(preds.cpu().numpy())
@@ -523,6 +525,7 @@ class Ped_Classifier():
         val_epoch_info = {
             'accuracy': val_accuracy,
             'balanced_accuracy': val_bc,
+            'loss': val_loss
         }
 
         return DotDict(val_epoch_info)

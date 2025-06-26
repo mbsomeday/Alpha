@@ -23,7 +23,7 @@ ds_cls = train_ds_model_alpha(model_obj=model_obj,
                               warmup_epochs=3,
                               lr_patience=5
                               )
-
+ds_cls.train_model()
 
 
 

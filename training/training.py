@@ -1138,10 +1138,12 @@ class train_ds_model_alpha():
         # -------------------- Callbacks --------------------
         save_prefix = model_obj.split('.')[-1] + '_dsCls'
         self.callback_save_path = os.path.join(os.getcwd(), save_prefix)
-        self.early_stopping = EarlyStopping(save_prefix, top_k=2)
+        if not os.path.exists(self.callback_save_path):
+            os.mkdir(self.callback_save_path)
         train_num_info = [len(self.train_dataset), -1, -1]
         val_num_info = [len(self.val_dataset), -1, -1]
 
+        self.early_stopping = EarlyStopping(self.callback_save_path, top_k=2)
         self.epoch_logger = Model_Logger(save_dir=self.callback_save_path, model_name=model_obj.split('.')[-1],
                                          ds_name_list=self.ds_name_list, train_num_info=train_num_info, val_num_info=val_num_info
                                          )

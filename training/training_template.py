@@ -90,7 +90,7 @@ class Blur_Image_Patch():
 
     def __init__(self, model_obj, ds_weights_path):
         self.ds_weights_path = ds_weights_path
-        self.num_classes = 4
+        self.num_classes = 2
         self.ds_model = get_obj_from_str(model_obj)(num_class=self.num_classes)
         self.ds_model = load_model(self.ds_model, self.ds_weights_path).to(DEVICE).eval()
 

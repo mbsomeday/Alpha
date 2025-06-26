@@ -1119,7 +1119,7 @@ class train_ds_model_alpha():
         self.ds_name_list = ds_name_list
         # self.ds_name_list = ['D1', 'D2', 'D3', 'D4']
 
-        self.train_dataset = my_dataset(self.ds_name_list, path_key=self.path_key, txt_name='augmentation_train.txt')
+        self.train_dataset = my_dataset(self.ds_name_list, path_key=self.path_key, txt_name='train.txt')
         self.train_loader = DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True)
 
         self.val_dataset = my_dataset(self.ds_name_list, path_key=self.path_key, txt_name='val.txt')

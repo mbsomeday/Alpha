@@ -19,7 +19,7 @@ model_obj = 'models.EfficientNet.efficientNetB0'
 ds_cls = train_ds_model_alpha(model_obj=model_obj,
                               batch_size=64,
                               path_key='Stage6_org',
-                              ds_name_list=['D1', 'D4'],
+                              ds_name_list=['D1', 'D2'],
                               warmup_epochs=3,
                               lr_patience=5
                               )

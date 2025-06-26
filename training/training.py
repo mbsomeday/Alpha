@@ -1252,7 +1252,7 @@ class train_ds_model_alpha():
             'val_accuracy': val_accuracy,
             'val_loss': val_loss,
             'val_correct_num': val_correct_num,
-            'val_bc': val_bc,
+            'balanced_accuracy': val_bc,
         }
 
         val_epoch_info = DotDict(val_epoch_info)

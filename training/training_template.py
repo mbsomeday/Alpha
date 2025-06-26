@@ -95,7 +95,7 @@ class Blur_Image_Patch():
         self.ds_model = load_model(self.ds_model, self.ds_weights_path).to(DEVICE).eval()
 
         self.grad_layer = 'features'
-        self.attention_thresh = 0.5
+        # self.attention_thresh = 0.5
         self.forward_feature = None
         self.backward_grads = None
 

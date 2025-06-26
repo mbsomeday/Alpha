@@ -6,16 +6,31 @@ sys.path.append(root_path)
 
 import argparse
 
-from training.training_template import Ped_Classifier
+# from training.training_template import Ped_Classifier
 from configs.pedCls_args import BaseArgs, TrainArgs, TestArgs
+#
+#
+# opts = TestArgs().parse()
+# ped_cls = Ped_Classifier(opts=opts)
+# ped_cls.test()
+
+from test_func.ds_cls import test_ds_classifier
 
 
-opts = TestArgs().parse()
-ped_cls = Ped_Classifier(opts=opts)
-ped_cls.test()
+def get_opts():
+    parser = argparse.ArgumentParser()
+    """Define the common options that are used in both training and test."""
+    parser.add_argument('--weights_path', type=float)
+    return parser.parse_args()
 
-
-
+opts = get_opts()
+weights_path = opts.weights_path
+ds_cls = test_ds_classifier(model_obj='models.EfficientNet.efficientNetB0',
+                            ds_name_list=['D1', 'D2'],
+                            batch_size=96,
+                            weights_path=weights_path,
+                            txt_name='test.txt'
+                            )
 
 
 

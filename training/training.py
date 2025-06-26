@@ -1107,8 +1107,6 @@ class train_ds_model_alpha():
         self.base_lr = base_lr
         self.lr_patience = lr_patience
 
-
-
         # -------------------- 获取 ped model for train --------------------
         print(f'model_obj:{model_obj}')
         self.model = get_obj_from_str(model_obj)(num_class=4)
@@ -1139,13 +1137,12 @@ class train_ds_model_alpha():
 
         # -------------------- Callbacks --------------------
         save_prefix = model_obj.split('.')[-1] + '_dsCls'
-        callback_savd_dir = save_prefix
-
+        self.callback_save_path = os.path.join(os.getcwd(), save_prefix)
         self.early_stopping = EarlyStopping(save_prefix, top_k=2)
         train_num_info = [len(self.train_dataset), -1, -1]
         val_num_info = [len(self.val_dataset), -1, -1]
 
-        self.epoch_logger = Model_Logger(save_dir=callback_savd_dir, model_name=model_obj.split('.')[-1],
+        self.epoch_logger = Model_Logger(save_dir=self.callback_save_path, model_name=model_obj.split('.')[-1],
                                          ds_name_list=self.ds_name_list, train_num_info=train_num_info, val_num_info=val_num_info
                                          )
 

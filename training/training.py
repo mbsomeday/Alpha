@@ -23,7 +23,7 @@ from data.dataset import my_dataset
 # from train_callbacks import EarlyStopping, Model_Logger   # local
 from training.train_callbacks import EarlyStopping, Model_Logger
 
-from utils.utils import get_obj_from_str, load_model
+from utils.utils import get_obj_from_str, load_model, TemporaryGrad
 from utils.utils import get_vgg_DSmodel, DotDict
 
 from torch.optim import SGD
@@ -301,18 +301,6 @@ class train_ds_model():
             if self.early_stopping.early_stop:
                 print(f'Early Stopping!')
                 break
-
-
-class TemporaryGrad(object):
-    '''
-    https://blog.csdn.net/qq_44980390/article/details/123672147
-    '''
-    def __enter__(self):
-        self.prev = torch.is_grad_enabled()
-        torch.set_grad_enabled(True)
-
-    def __exit__(self, exc_type, exc_value, traceback) -> None:
-        torch.set_grad_enabled(self.prev)
 
 
 class train_pedmodel_camLoss():
@@ -1097,7 +1085,8 @@ class train_ped_model_alpha():
 class train_ds_model_alpha():
     def __init__(self, model_obj: str,
                  batch_size,
-                 # ds_name_list,
+                 path_key,
+                 ds_name_list,
                  epochs=50,
                  reload=None,
                  base_lr=0.01,
@@ -1118,19 +1107,22 @@ class train_ds_model_alpha():
         self.base_lr = base_lr
         self.lr_patience = lr_patience
 
+
+
         # -------------------- 获取 ped model for train --------------------
         print(f'model_obj:{model_obj}')
         self.model = get_obj_from_str(model_obj)(num_class=4)
         self.model = self.model.to(DEVICE)
 
         # -------------------- 获取数据 --------------------
-        # self.ds_name_list = ds_name_list
-        self.ds_name_list = ['D1', 'D2', 'D3', 'D4']
+        self.path_key = path_key
+        self.ds_name_list = ds_name_list
+        # self.ds_name_list = ['D1', 'D2', 'D3', 'D4']
 
-        self.train_dataset = my_dataset(self.ds_name_list, path_key='org_dataset', txt_name='augmentation_train.txt')
+        self.train_dataset = my_dataset(self.ds_name_list, path_key=self.path_key, txt_name='augmentation_train.txt')
         self.train_loader = DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True)
 
-        self.val_dataset = my_dataset(self.ds_name_list, path_key='org_dataset', txt_name='val.txt')
+        self.val_dataset = my_dataset(self.ds_name_list, path_key=self.path_key, txt_name='val.txt')
         self.val_loader = DataLoader(self.val_dataset, batch_size=batch_size, shuffle=False)
 
         # -------------------- 训练配置 --------------------
@@ -1153,9 +1145,8 @@ class train_ds_model_alpha():
         train_num_info = [len(self.train_dataset), -1, -1]
         val_num_info = [len(self.val_dataset), -1, -1]
 
-        self.epoch_logger = Epoch_logger(save_dir=callback_savd_dir, model_name=model_obj.split('.')[-1],
-                                         ds_name_list=self.ds_name_list, train_num_info=train_num_info, val_num_info=val_num_info,
-                                         task='ds_cls'
+        self.epoch_logger = Model_Logger(save_dir=callback_savd_dir, model_name=model_obj.split('.')[-1],
+                                         ds_name_list=self.ds_name_list, train_num_info=train_num_info, val_num_info=val_num_info
                                          )
 
         # -------------------- 如果reload，optmizer，start_epoch等也要重新设置 --------------------

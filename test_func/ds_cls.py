@@ -8,7 +8,7 @@ from data.dataset import my_dataset
 from utils.utils import load_model, get_obj_from_str, DEVICE
 
 
-def test_ds_classifier(model_obj, weights_path, batch_size, txt_name):
+def test_ds_classifier(model_obj, ds_name_list, path_key, weights_path, batch_size, txt_name):
     '''
         测试数据集分类模型
     :param model_obj:
@@ -16,11 +16,11 @@ def test_ds_classifier(model_obj, weights_path, batch_size, txt_name):
     :param batch_size:
     :return:
     '''
-    ds_model = get_obj_from_str(model_obj)(num_class=4)
+    ds_model = get_obj_from_str(model_obj)(num_class=len(ds_name_list))
     ds_model = load_model(ds_model, weights_path).to(DEVICE)
     ds_model.eval()
 
-    ds_dataset = my_dataset(ds_name_list=['D1', 'D2', 'D3', 'D4'], path_key='org_dataset', txt_name=txt_name)
+    ds_dataset = my_dataset(ds_name_list=ds_name_list, path_key=path_key, txt_name=txt_name)
     ds_loader = DataLoader(ds_dataset, batch_size=batch_size, shuffle=False)
 
     correct_num = 0

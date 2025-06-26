@@ -29,7 +29,8 @@ ds_cls = test_ds_classifier(model_obj='models.EfficientNet.efficientNetB0',
                             ds_name_list=['D1', 'D2'],
                             batch_size=96,
                             weights_path=weights_path,
-                            txt_name='test.txt'
+                            txt_name='test.txt',
+                            path_key='Stage6_org'
                             )
 
 

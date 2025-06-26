@@ -26,6 +26,7 @@ LCA = {
 
 LOCAL = {
     'Stage6_org': {
+        'D1': r'D:\my_phd\dataset\Stage6\stage6_ecp',
         'D4': r'D:\my_phd\dataset\Stage6\stage6_bdd100k',
 
     },
@@ -74,8 +75,7 @@ KAGGLE = {
     'Stage6_org': {
         'D1': r'/kaggle/input/stage6-dataset-ecp',
 
-        'D4': r'/kaggle/input/stage6-dataset-bdd100k',
-
+        'D2': r'/kaggle/input/stage6-dataset-bdd100k',
     },
     'org_dataset': {
         'D1': r'/kaggle/input/stage4-d1-ecpdaytime-7augs',

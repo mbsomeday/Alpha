@@ -75,7 +75,7 @@ KAGGLE = {
     'Stage6_org': {
         'D1': r'/kaggle/input/stage6-dataset-ecp',
 
-        'D2': r'/kaggle/input/stage6-dataset-bdd100k',
+        'D4': r'/kaggle/input/stage6-dataset-bdd100k',
     },
     'org_dataset': {
         'D1': r'/kaggle/input/stage4-d1-ecpdaytime-7augs',

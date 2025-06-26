@@ -20,7 +20,7 @@ from test_func.ds_cls import test_ds_classifier
 def get_opts():
     parser = argparse.ArgumentParser()
     """Define the common options that are used in both training and test."""
-    parser.add_argument('--weights_path', type=float)
+    parser.add_argument('--weights_path', type=str)
     return parser.parse_args()
 
 opts = get_opts()

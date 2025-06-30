@@ -40,6 +40,7 @@ ped_model = train_ped_model_alpha(model_obj=eff_model_obj,
                  camLoss_coefficient=0.2,
                  ds_model_obj=eff_model_obj,
                  save_best_cls=False)
+ped_model.train_model()
 
 
 

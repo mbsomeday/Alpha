@@ -787,7 +787,6 @@ class train_ped_model_alpha():
         '''
         with TemporaryGrad():
             logits = model(image)
-            print('type(image)', type(image))
             pred = torch.argmax(logits, dim=1)
             model.zero_grad()
             grad_yc = logits[0, pred]

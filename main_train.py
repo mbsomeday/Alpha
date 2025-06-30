@@ -46,7 +46,7 @@ ds_weights = args.ds_weights
 
 ped_model = train_ped_model_alpha(model_obj=eff_model_obj,
                  ds_name_list=['D2'],
-                 batch_size=32,
+                 batch_size=64,
                  reload=None,
                  epochs=150,
                  base_lr=0.01,

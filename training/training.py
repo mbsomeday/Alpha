@@ -650,6 +650,7 @@ class train_ped_model_alpha():
                  lr_patience=5,
                  camLoss_coefficient=None,
                  ds_model_obj=None,
+                 ds_weights=None,
                  save_best_cls=False):
         '''
         todo: 为什么 camLoss_coefficient 不设置为0？
@@ -673,6 +674,7 @@ class train_ped_model_alpha():
         self.save_best_cls = save_best_cls
         self.camLoss_coefficient = camLoss_coefficient
         self.ds_model_obj = ds_model_obj
+        self.ds_weights = ds_weights
 
         # -------------------- 获取 ped model for train --------------------
         self.model = get_obj_from_str(model_obj)(num_class=2)
@@ -727,11 +729,11 @@ class train_ped_model_alpha():
         # -------------------- 获取ds model，目的是融入 cam loss --------------------
         if self.camLoss_coefficient is not None:
             self.ds_model = get_obj_from_str(self.ds_model_obj)(num_class=4)
-            ds_weights = r'/kaggle/input/stage5-weights-effidscls/efficientNetB0_dsCls-10-0.97636.pth'
+            # ds_weights = r'/kaggle/input/stage5-weights-effidscls/efficientNetB0_dsCls-10-0.97636.pth'
             # ds_weights = r'D:\my_phd\Model_Weights\Stage5\EfficientNetB0_Scratch\efficientNetB0_dsCls-10-0.97636.pth'
-            # ds_weights = r'/data/jcampos/jiawei_data/code/ResNet34_dsCls/ResNet34_dsCls-23-0.96353.pth'
+            # ds_weights = r'/data/jcampos/jiawei_data/model_weights/Stage5/efficientB0/efficientNetB0_dsCls-10-0.97636.pth'
             # ds_weights = r'/veracruz/home/j/jwang/data/model_weights/efficientNetB0_dsCls-10-0.97636.pth'
-            self.ds_model = load_model(self.ds_model, ds_weights)
+            self.ds_model = load_model(self.ds_model, self.ds_weights)
             self.ds_model.eval()
             self.ds_model = self.ds_model.to(DEVICE)
 
@@ -1080,11 +1082,11 @@ class train_ped_model_alpha():
             # ------------------------ 开始训练 ------------------------
             print('=' * 30 + ' begin EPOCH ' + str(epoch + 1) + '=' * 30)
             train_epoch_info = self.train_one_epoch()
-            val_epoch_info = self.val_on_epoch_end(epoch)
+            # val_epoch_info = self.val_on_epoch_end(epoch)
 
             # ------------------------ 训练epoch的callbacks ------------------------
-            self.early_stopping(epoch+1, self.model, self.optimizer, val_epoch_info)
-            self.epoch_logger(epoch=epoch+1, training_info=train_epoch_info, val_info=val_epoch_info)
+            # self.early_stopping(epoch+1, self.model, self.optimizer, val_epoch_info)
+            # self.epoch_logger(epoch=epoch+1, training_info=train_epoch_info, val_info=val_epoch_info)
 
             # ------------------------ 学习率调整 ------------------------
             self.lr_decay(epoch + 1)
@@ -1092,6 +1094,7 @@ class train_ped_model_alpha():
             if self.early_stopping.early_stop:
                 print(f'Early Stopping!')
                 break
+            break
 
 
 

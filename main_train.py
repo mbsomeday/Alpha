@@ -7,7 +7,7 @@ sys.path.append(root_path)
 import argparse
 
 # from training.training_template import Ped_Classifier
-# from configs.pedCls_args import TrainArgs
+from configs.pedCls_args import TrainArgs
 #
 # opts = TrainArgs().parse()
 # ped_cls = Ped_Classifier(opts=opts)
@@ -28,7 +28,22 @@ import argparse
 
 from training.training import train_ped_model_alpha
 
+
+def initialize():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--ds_weights', type=str, default=None)
+
+    args = parser.parse_args()
+
+    return args
+
 eff_model_obj = 'models.EfficientNet.efficientNetB0'
+args = initialize()
+ds_weights = args.ds_weights
+
+# ds_weights = r'/data/jcampos/jiawei_data/model_weights/Stage5/efficientB0/efficientNetB0_dsCls-10-0.97636.pth'
+
 ped_model = train_ped_model_alpha(model_obj=eff_model_obj,
                  ds_name_list=['D2'],
                  batch_size=64,
@@ -39,7 +54,9 @@ ped_model = train_ped_model_alpha(model_obj=eff_model_obj,
                  lr_patience=5,
                  camLoss_coefficient=0.2,
                  ds_model_obj=eff_model_obj,
+                 ds_weights=ds_weights,
                  save_best_cls=False)
+
 ped_model.train_model()
 
 

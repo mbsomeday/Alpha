@@ -713,7 +713,7 @@ class train_ped_model_alpha():
         if not os.path.exists(self.callback_save_path):
             os.mkdir(self.callback_save_path)
 
-        self.early_stopping = EarlyStopping(save_prefix, top_k=2)
+        self.early_stopping = EarlyStopping(save_prefix, top_k=3, patience=15)
 
         train_num_info = [len(self.train_dataset), self.train_nonPed_num, self.train_ped_num]
         val_num_info = [len(self.val_dataset), self.val_nonPed_num, self.val_ped_num]

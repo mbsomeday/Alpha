@@ -6,13 +6,12 @@ sys.path.append(root_path)
 
 import argparse
 
-from training.training_template import Ped_Classifier
-from configs.pedCls_args import TrainArgs
-
-
-opts = TrainArgs().parse()
-ped_cls = Ped_Classifier(opts=opts)
-ped_cls.train()
+# from training.training_template import Ped_Classifier
+# from configs.pedCls_args import TrainArgs
+#
+# opts = TrainArgs().parse()
+# ped_cls = Ped_Classifier(opts=opts)
+# ped_cls.train()
 
 
 # from training.training import train_ds_model_alpha
@@ -27,8 +26,20 @@ ped_cls.train()
 # ds_cls.train_model()
 
 
+from training.training import train_ped_model_alpha
 
-
+eff_model_obj = 'models.EfficientNet.efficientNetB0'
+ped_model = train_ped_model_alpha(model_obj=eff_model_obj,
+                 ds_name_list=['D2'],
+                 batch_size=96,
+                 reload=None,
+                 epochs=150,
+                 base_lr=0.01,
+                 warmup_epochs=3,
+                 lr_patience=5,
+                 camLoss_coefficient=0.2,
+                 ds_model_obj=eff_model_obj,
+                 save_best_cls=False)
 
 
 

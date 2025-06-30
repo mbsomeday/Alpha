@@ -42,7 +42,6 @@ eff_model_obj = 'models.EfficientNet.efficientNetB0'
 args = initialize()
 ds_weights = args.ds_weights
 
-# ds_weights = r'/data/jcampos/jiawei_data/model_weights/Stage5/efficientB0/efficientNetB0_dsCls-10-0.97636.pth'
 
 ped_model = train_ped_model_alpha(model_obj=eff_model_obj,
                  ds_name_list=['D2'],

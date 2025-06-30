@@ -1082,11 +1082,11 @@ class train_ped_model_alpha():
             # ------------------------ 开始训练 ------------------------
             print('=' * 30 + ' begin EPOCH ' + str(epoch + 1) + '=' * 30)
             train_epoch_info = self.train_one_epoch()
-            # val_epoch_info = self.val_on_epoch_end(epoch)
+            val_epoch_info = self.val_on_epoch_end(epoch)
 
             # ------------------------ 训练epoch的callbacks ------------------------
-            # self.early_stopping(epoch+1, self.model, self.optimizer, val_epoch_info)
-            # self.epoch_logger(epoch=epoch+1, training_info=train_epoch_info, val_info=val_epoch_info)
+            self.early_stopping(epoch+1, self.model, self.optimizer, val_epoch_info)
+            self.epoch_logger(epoch=epoch+1, training_info=train_epoch_info, val_info=val_epoch_info)
 
             # ------------------------ 学习率调整 ------------------------
             self.lr_decay(epoch + 1)
@@ -1094,7 +1094,6 @@ class train_ped_model_alpha():
             if self.early_stopping.early_stop:
                 print(f'Early Stopping!')
                 break
-            break
 
 
 

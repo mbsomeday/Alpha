@@ -8,6 +8,8 @@
 # sys.path.append(root_path)
 
 import os.path
+
+import matplotlib.pyplot as plt
 import torch, torchvision
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -725,8 +727,8 @@ class train_ped_model_alpha():
         # -------------------- 获取ds model，目的是融入 cam loss --------------------
         if self.camLoss_coefficient is not None:
             self.ds_model = get_obj_from_str(self.ds_model_obj)(num_class=4)
-            ds_weights = r'/kaggle/input/stage5-weights-effidscls/efficientNetB0_dsCls-10-0.97636.pth'
-            # ds_weights = r'/data/jcampos/jiawei_data/code/efficientNetB0_dsCls/efficientNetB0_dsCls-10-0.97636.pth'
+            # ds_weights = r'/kaggle/input/stage5-weights-effidscls/efficientNetB0_dsCls-10-0.97636.pth'
+            ds_weights = r'D:\my_phd\Model_Weights\Stage5\EfficientNetB0_Scratch\efficientNetB0_dsCls-10-0.97636.pth'
             # ds_weights = r'/data/jcampos/jiawei_data/code/ResNet34_dsCls/ResNet34_dsCls-23-0.96353.pth'
             # ds_weights = r'/veracruz/home/j/jwang/data/model_weights/efficientNetB0_dsCls-10-0.97636.pth'
             self.ds_model = load_model(self.ds_model, ds_weights)
@@ -785,6 +787,7 @@ class train_ped_model_alpha():
         '''
         with TemporaryGrad():
             logits = model(image)
+            print('type(image)', type(image))
             pred = torch.argmax(logits, dim=1)
             model.zero_grad()
             grad_yc = logits[0, pred]
@@ -815,6 +818,17 @@ class train_ped_model_alpha():
             mask.requires_grad = False
             mask[mask < Ac_max] = 0
             masked_image = image - image * mask
+
+            from torchvision import transforms
+            plt_transform = transforms.ToPILImage()
+            plt.figure()
+            plt.subplot(131)
+            plt.imshow(plt_transform(image[0]))
+            plt.subplot(132)
+            plt.imshow(plt_transform(mask[0]))
+            plt.subplot(133)
+            plt.imshow(plt_transform(masked_image[0]))
+            plt.show()
 
         return heatmap, mask, masked_image
 
@@ -964,6 +978,7 @@ class train_ped_model_alpha():
                         image = torch.unsqueeze(image, dim=0)
                         heatmap, mask, masked_image = self.calc_cam(self.ds_model, image)
                         masked_images[img_idx] = masked_image.cpu().detach()
+                        break
                     masked_images = torch.tensor(masked_images)
                     masked_images = masked_images.to(DEVICE)
                     masked_images = masked_images.type(torch.float32)
@@ -999,6 +1014,7 @@ class train_ped_model_alpha():
                     loss_cls = self.loss_fn(out, labels)
                     loss = loss_cls
                     pred = org_pred
+                break
 
                 val_correct_num += (pred == labels).sum()
                 val_loss += loss.item()
@@ -1299,17 +1315,21 @@ class train_ds_model_alpha():
 
 
 
+if __name__ == '__main__':
+    # print('a')
+    from models.VGG import vgg16_bn
+    from utils.utils import get_obj_from_str
+    from models.EfficientNet import efficientNetB0
+    import math
 
+    eff_model_obj = 'models.EfficientNet.efficientNetB0'
 
-# if __name__ == '__main__':
-#     # print('a')
-#     from models.VGG import vgg16_bn
-#     from utils.utils import get_obj_from_str
-#     import math
-#
-#     test_alpha = train_ped_model_alpha(model_obj='models.VGG.vgg16_bn', ds_name_list=['D3'], batch_size=4, reload=None,
-#                                        save_prefix=None,
-#                                        )
+    image_path = r'D:\my_phd\on_git\DatasetBias\amsterdam_01078.png'
+    test_alpha = train_ped_model_alpha(model_obj='models.VGG.vgg16_bn', ds_name_list=['D2'], batch_size=4, reload=None,
+                                       ds_model_obj=eff_model_obj,
+                                       camLoss_coefficient=0.2
+                                       )
+    test_alpha.val_on_epoch_end(epoch=1)
 
 
 

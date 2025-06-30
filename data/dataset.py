@@ -55,7 +55,7 @@ class RandomAug():
 
         # Convert to tensor and normalize
         img = F.to_tensor(img)
-        img = F.normalize(img, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        # img = F.normalize(img, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 
         return img
 
@@ -76,15 +76,22 @@ class my_dataset(Dataset):
             self.ds_label_list.append(int(ds_name[1]) - 1)
 
         self.txt_name = txt_name
-        if 'train' in self.txt_name:
-            print(f'Training phase, using random augmentation')
-            self.img_transforms = RandomAug()
-        else:
-            print(f'Testing/Val phase, no image augmentation')
-            self.img_transforms = transforms.Compose([
-                transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-            ])
+        self.img_transforms = transforms.Compose([
+            transforms.ToTensor(),
+        ])
+
+        '''
+            不同image transformer的设置
+        '''
+        # if 'train' in self.txt_name:
+        #     print(f'Training phase, using random augmentation')
+        #     self.img_transforms = RandomAug()
+        # else:
+        #     print(f'Testing/Val phase, no image augmentation')
+        #     self.img_transforms = transforms.Compose([
+        #         transforms.ToTensor(),
+        #         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        #     ])
         self.images, self.ped_labels, self.ds_labels = self.init_ImagesLabels()
         print(f'Get dataset: {ds_name_list}, txt_name: {txt_name}, total {len(self.images)} images')
 

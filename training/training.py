@@ -819,16 +819,16 @@ class train_ped_model_alpha():
             mask[mask < Ac_max] = 0
             masked_image = image - image * mask
 
-            from torchvision import transforms
-            plt_transform = transforms.ToPILImage()
-            plt.figure()
-            plt.subplot(131)
-            plt.imshow(plt_transform(image[0]))
-            plt.subplot(132)
-            plt.imshow(plt_transform(mask[0]))
-            plt.subplot(133)
-            plt.imshow(plt_transform(masked_image[0]))
-            plt.show()
+            # from torchvision import transforms
+            # plt_transform = transforms.ToPILImage()
+            # plt.figure()
+            # plt.subplot(131)
+            # plt.imshow(plt_transform(image[0]))
+            # plt.subplot(132)
+            # plt.imshow(plt_transform(mask[0]))
+            # plt.subplot(133)
+            # plt.imshow(plt_transform(masked_image[0]))
+            # plt.show()
 
         return heatmap, mask, masked_image
 

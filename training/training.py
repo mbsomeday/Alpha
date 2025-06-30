@@ -977,7 +977,6 @@ class train_ped_model_alpha():
                         image = torch.unsqueeze(image, dim=0)
                         heatmap, mask, masked_image = self.calc_cam(self.ds_model, image)
                         masked_images[img_idx] = masked_image.cpu().detach()
-                        break
                     masked_images = torch.tensor(masked_images)
                     masked_images = masked_images.to(DEVICE)
                     masked_images = masked_images.type(torch.float32)
@@ -1013,7 +1012,6 @@ class train_ped_model_alpha():
                     loss_cls = self.loss_fn(out, labels)
                     loss = loss_cls
                     pred = org_pred
-                break
 
                 val_correct_num += (pred == labels).sum()
                 val_loss += loss.item()

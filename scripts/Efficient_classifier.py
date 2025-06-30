@@ -43,7 +43,6 @@ ds_name_list = [ds_name]
 # model_obj = 'models.EfficientNet.efficientNetB0'
 # weights_path = r'C:\Users\wangj\Desktop\efficientB0\efficientB0_dsCls\efficientNetB0_dsCls-10-0.97636.pth'
 
-# test_ds_classifier(model_obj=model_obj, weights_path=weights_path, batch_size=batch_size)
 test_ped_classifier(model_obj=model_obj, weights_path=weights_path, batch_size=batch_size, ds_name_list=ds_name_list, txt_name=txt_name)
 
 

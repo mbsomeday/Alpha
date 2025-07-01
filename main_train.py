@@ -55,7 +55,7 @@ ped_model = train_ped_model_alpha(model_obj=eff_model_obj,
                  base_lr=0.01,
                  warmup_epochs=3,
                  lr_patience=5,
-                 camLoss_coefficient=None,
+                 camLoss_coefficient=camLoss_coefficient,
                  ds_model_obj=eff_model_obj,
                  ds_weights=ds_weights,
                  save_best_cls=False)

@@ -34,6 +34,7 @@ def initialize():
 
     parser.add_argument('--ds_name_list', nargs='+', default=['D1'], help='dataset list')
     parser.add_argument('--ds_weights', type=str, default=None)
+    parser.add_argument('--camLoss_coefficient', type=float)
 
     args = parser.parse_args()
 
@@ -43,6 +44,7 @@ eff_model_obj = 'models.EfficientNet.efficientNetB0'
 args = initialize()
 ds_weights = args.ds_weights
 ds_name_list = args.ds_name_list
+camLoss_coefficient = args.camLoss_coefficient if args.camLoss_coefficient > 0.0 else None
 
 
 ped_model = train_ped_model_alpha(model_obj=eff_model_obj,

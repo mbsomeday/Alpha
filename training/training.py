@@ -683,7 +683,7 @@ class train_ped_model_alpha():
 
         # -------------------- 获取数据 --------------------
         self.ds_name_list = ds_name_list
-        self.train_dataset = my_dataset(ds_name_list, path_key=self.ds_path_key, txt_name='augmentation_train.txt')
+        self.train_dataset = my_dataset(ds_name_list, path_key=self.ds_path_key, txt_name='train.txt')
         self.train_loader = DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True)
 
         self.val_dataset = my_dataset(ds_name_list, path_key=self.ds_path_key, txt_name='val.txt')

@@ -16,7 +16,7 @@ def test_ds_classifier(model_obj, ds_name_list, path_key, weights_path, batch_si
     :param batch_size:
     :return:
     '''
-    ds_model = get_obj_from_str(model_obj)(num_class=len(ds_name_list))
+    ds_model = get_obj_from_str(model_obj)(num_class=4)
     ds_model = load_model(ds_model, weights_path).to(DEVICE)
     ds_model.eval()
 

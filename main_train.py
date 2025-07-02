@@ -7,7 +7,7 @@ sys.path.append(root_path)
 import argparse
 
 # from training.training_template import Ped_Classifier
-from configs.pedCls_args import TrainArgs
+# from configs.pedCls_args import TrainArgs
 #
 # opts = TrainArgs().parse()
 # ped_cls = Ped_Classifier(opts=opts)

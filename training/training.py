@@ -675,6 +675,7 @@ class train_ped_model_alpha():
         self.camLoss_coefficient = camLoss_coefficient
         self.ds_model_obj = ds_model_obj
         self.ds_weights = ds_weights
+        self.ds_path_key = 'Stage6_org'
 
         # -------------------- 获取 ped model for train --------------------
         self.model = get_obj_from_str(model_obj)(num_class=2)
@@ -682,10 +683,10 @@ class train_ped_model_alpha():
 
         # -------------------- 获取数据 --------------------
         self.ds_name_list = ds_name_list
-        self.train_dataset = my_dataset(ds_name_list, path_key='org_dataset', txt_name='augmentation_train.txt')
+        self.train_dataset = my_dataset(ds_name_list, path_key=self.ds_path_key, txt_name='augmentation_train.txt')
         self.train_loader = DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True)
 
-        self.val_dataset = my_dataset(ds_name_list, path_key='org_dataset', txt_name='val.txt')
+        self.val_dataset = my_dataset(ds_name_list, path_key=self.ds_path_key, txt_name='val.txt')
         self.val_loader = DataLoader(self.val_dataset, batch_size=batch_size, shuffle=False)
 
         self.train_nonPed_num, self.train_ped_num = self.train_dataset.get_ped_cls_num()
@@ -729,10 +730,6 @@ class train_ped_model_alpha():
         # -------------------- 获取ds model，目的是融入 cam loss --------------------
         if self.camLoss_coefficient is not None:
             self.ds_model = get_obj_from_str(self.ds_model_obj)(num_class=4)
-            # ds_weights = r'/kaggle/input/stage5-weights-effidscls/efficientNetB0_dsCls-10-0.97636.pth'
-            # ds_weights = r'D:\my_phd\Model_Weights\Stage5\EfficientNetB0_Scratch\efficientNetB0_dsCls-10-0.97636.pth'
-            # ds_weights = r'/data/jcampos/jiawei_data/model_weights/Stage5/efficientB0/efficientNetB0_dsCls-10-0.97636.pth'
-            # ds_weights = r'/veracruz/home/j/jwang/data/model_weights/efficientNetB0_dsCls-10-0.97636.pth'
             self.ds_model = load_model(self.ds_model, self.ds_weights)
             self.ds_model.eval()
             self.ds_model = self.ds_model.to(DEVICE)
@@ -894,8 +891,6 @@ class train_ped_model_alpha():
             else:
                 loss = loss_cls
 
-            # loss = loss_cls         # baseline时不计算camloss
-
             y_true.extend(labels.cpu().numpy())
             y_pred.extend(pred.cpu().numpy())
 
@@ -918,8 +913,6 @@ class train_ped_model_alpha():
             ped_acc = (labels[ped_idx] == pred[ped_idx]) * 1
             ped_acc_num += ped_acc.sum()
 
-            # if batch == 10:
-            #     break
 
             # break
 

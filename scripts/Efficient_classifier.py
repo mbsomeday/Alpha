@@ -20,6 +20,7 @@ def get_args():
     parser.add_argument('--weights_path', type=str)
     # parser.add_argument('--epochs', default=50, type=int)
     parser.add_argument('--model_obj', type=str)
+    parser.add_argument('--path_key', type=str)
 
     # parser.add_argument('--reload', default=None, type=str)
     # parser.add_argument('--task', type=str, choices=('ped_cls', 'ds_cls'), help='used to define the num_classes of model')
@@ -36,6 +37,7 @@ txt_name = args.txt_name
 # epochs = args.epochs
 # reload = args.reload
 model_obj = args.model_obj
+path_key = args.path_key
 
 ds_name_list = [ds_name]
 
@@ -43,7 +45,7 @@ ds_name_list = [ds_name]
 # model_obj = 'models.EfficientNet.efficientNetB0'
 # weights_path = r'C:\Users\wangj\Desktop\efficientB0\efficientB0_dsCls\efficientNetB0_dsCls-10-0.97636.pth'
 
-test_ped_classifier(model_obj=model_obj, weights_path=weights_path, batch_size=batch_size, ds_name_list=ds_name_list, txt_name=txt_name)
+test_ped_classifier(model_obj=model_obj, weights_path=weights_path, batch_size=batch_size, ds_name_list=ds_name_list, txt_name=txt_name, path_key=path_key)
 
 
 # my_train = train_ped_model_alpha(model_obj=model_obj, ds_name_list=ds_name_list, batch_size=batch_size)

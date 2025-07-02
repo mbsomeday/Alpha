@@ -41,7 +41,7 @@ test_ds_classifier(model_obj='models.EfficientNet.efficientNetB0',
                    path_key='Stage6_org',
                    weights_path=r'/kaggle/input/stage5-weights-effidscls/efficientNetB0_dsCls-10-0.97636.pth',
                    batch_size=96,
-                   txt_name='test.txt'
+                   txt_name='val.txt'
                    )
 
 

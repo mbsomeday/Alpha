@@ -34,7 +34,7 @@ def initialize():
 
     parser.add_argument('--ds_name_list', nargs='+', default=['D1'], help='dataset list')
     parser.add_argument('--ds_weights', type=str, default=None)
-    parser.add_argument('--key_path', typr=str)
+    parser.add_argument('--key_path', type=str)
     parser.add_argument('--camLoss_coefficient', type=float)
 
     args = parser.parse_args()

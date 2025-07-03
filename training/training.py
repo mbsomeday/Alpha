@@ -643,6 +643,7 @@ class train_ped_model_alpha():
     def __init__(self, model_obj: str,
                  ds_name_list,
                  batch_size,
+                 ds_key_path,
                  reload=None,
                  epochs=50,
                  base_lr=0.01,
@@ -675,7 +676,7 @@ class train_ped_model_alpha():
         self.camLoss_coefficient = camLoss_coefficient
         self.ds_model_obj = ds_model_obj
         self.ds_weights = ds_weights
-        self.ds_path_key = 'Stage6_org'
+        self.ds_path_key = ds_key_path
 
         # -------------------- 获取 ped model for train --------------------
         self.model = get_obj_from_str(model_obj)(num_class=2)

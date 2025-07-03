@@ -6,7 +6,7 @@ import os, argparse
 from tqdm import tqdm
 
 from data.dataset import my_dataset
-from utils.utils import save_image_tensor
+from utils import save_image_tensor
 
 
 
@@ -35,8 +35,10 @@ def image_aug(base_dir):
         img_bright_save_path = os.path.join(base_dir, 'augmentation_train', path_contenst[-2], bright_name)
         save_image_tensor(img_bright, img_bright_save_path)
 
-        org_image_save_path = os.path.join(base_dir, 'augmentation_train', path_contenst[-2], image_paths[-1])
+        org_image_save_path = os.path.join(base_dir, 'augmentation_train', path_contenst[-2], image_name)
         save_image_tensor(images, org_image_save_path)
+        # print(org_image_save_path)
+
 
 
         # plt.figure()
@@ -52,9 +54,10 @@ def image_aug(base_dir):
         # plt.show()
 
         # break
+        # break
 
-
-
+if __name__ == '__main__':
+    image_aug(base_dir=r'.')
 
 
 

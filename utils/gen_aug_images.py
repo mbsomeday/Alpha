@@ -11,7 +11,7 @@ from utils.utils import save_image_tensor
 
 
 def image_aug(base_dir):
-    get_dataset = my_dataset(ds_name_list=['D4'], path_key='Stage6_org', txt_name='test.txt')
+    get_dataset = my_dataset(ds_name_list=['D4'], path_key='Stage6_org', txt_name='train.txt')
     get_loader = DataLoader(get_dataset, batch_size=1, shuffle=False)
 
     plt_transform = transforms.ToPILImage()

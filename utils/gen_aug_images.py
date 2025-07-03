@@ -18,7 +18,7 @@ def image_aug(base_dir):
     bright_transform = transforms.transforms.ColorJitter(brightness=0.2)
 
     for idx, data_dict in enumerate(tqdm(get_loader)):
-        print(data_dict.keys())
+        # print(data_dict.keys())
 
         images = data_dict['image']
         image_paths = data_dict['img_path']

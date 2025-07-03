@@ -32,10 +32,10 @@ def image_aug(base_dir):
 
         img_bright = bright_transform(images)
         bright_name = image_name.split('.')[0] + '_bright.jpg'
-        img_bright_save_path = os.path.join('augmentation_train', path_contenst[-2], bright_name)
+        img_bright_save_path = os.path.join(base_dir, 'augmentation_train', path_contenst[-2], bright_name)
         save_image_tensor(img_bright, img_bright_save_path)
 
-        org_image_save_path = os.path.join('augmentation_train', path_contenst[-2], image_paths[-1])
+        org_image_save_path = os.path.join(base_dir, 'augmentation_train', path_contenst[-2], image_paths[-1])
         save_image_tensor(images, org_image_save_path)
 
 

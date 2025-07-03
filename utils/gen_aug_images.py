@@ -25,10 +25,10 @@ def image_aug(base_dir):
         path_contenst = image_paths[0].split(os.sep)
         image_name = path_contenst[-1]
 
-        img_flip = F.hflip(images)
-        flip_name = image_name.split('.')[0] + '_flip.jpg'
-        img_flip_save_path = os.path.join(base_dir, 'augmentation_train', path_contenst[-2], flip_name)
-        save_image_tensor(img_flip, img_flip_save_path)
+        # img_flip = F.hflip(images)
+        # flip_name = image_name.split('.')[0] + '_flip.jpg'
+        # img_flip_save_path = os.path.join(base_dir, 'augmentation_train', path_contenst[-2], flip_name)
+        # save_image_tensor(img_flip, img_flip_save_path)
 
         img_bright = bright_transform(images)
         bright_name = image_name.split('.')[0] + '_bright.jpg'

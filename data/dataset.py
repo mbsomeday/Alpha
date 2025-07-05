@@ -139,7 +139,7 @@ class my_dataset(Dataset):
         ped_label = self.ped_labels[idx]
         ds_label = self.ds_labels[idx]
 
-        image = Image.open(image_path)
+        image = Image.open(image_path).convert('RGB')
         image = self.img_transforms(image)
         ped_label = np.array(ped_label).astype(np.int64)
         ds_label = np.array(ds_label).astype(np.int64)

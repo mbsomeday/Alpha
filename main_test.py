@@ -33,16 +33,16 @@ ped_cls.test()
 #                             )
 
 
-from test_func.ds_cls import test_ds_classifier
-
-
-test_ds_classifier(model_obj='models.EfficientNet.efficientNetB0',
-                   ds_name_list=['D1','D4'],
-                   path_key='Stage6_org',
-                   weights_path=r'/kaggle/input/stage5-weights-effidscls/efficientNetB0_dsCls-10-0.97636.pth',
-                   batch_size=96,
-                   txt_name='val.txt'
-                   )
+# from test_func.ds_cls import test_ds_classifier
+#
+#
+# test_ds_classifier(model_obj='models.EfficientNet.efficientNetB0',
+#                    ds_name_list=['D1','D4'],
+#                    path_key='Stage6_org',
+#                    weights_path=r'/kaggle/input/stage5-weights-effidscls/efficientNetB0_dsCls-10-0.97636.pth',
+#                    batch_size=96,
+#                    txt_name='val.txt'
+#                    )
 
 
 

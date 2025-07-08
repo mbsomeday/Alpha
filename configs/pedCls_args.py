@@ -42,7 +42,7 @@ class TrainArgs(BaseArgs):
 
         parser.add_argument('--ds_model_obj', type=str, default=None)
         parser.add_argument('--ds_weights_path', type=str, default=None)
-        parser.add_argument('--epochs', type=int, default=150)
+        parser.add_argument('--max_epochs', type=int, default=150, help='max epochs for training')
         parser.add_argument('--resume', action='store_true')
         parser.add_argument('--warmup_epochs', type=int, default=3)
 
@@ -55,7 +55,7 @@ class TrainArgs(BaseArgs):
         parser.add_argument('--base_lr', type=float, default=0.01)
 
         # callbacks
-        parser.add_argument('--top_k', type=int, default=2)
+        parser.add_argument('--top_k', type=int, default=3)
         parser.add_argument('--patience', type=int, default=10)
 
         return parser

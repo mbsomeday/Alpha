@@ -189,6 +189,9 @@ class Blur_Image_Patch():
 
 
 class Ped_Classifier():
+    '''
+        该类是在train的过程中对org image进行cam operation，
+    '''
     def __init__(self, opts):
 
         # 确保在服务器运行时只用一个GPU
@@ -206,10 +209,10 @@ class Ped_Classifier():
         else:
             # 若是测试，则创建 test 文件夹用于存储结果
             self.callback_save_path = os.path.join(os.getcwd(), 'Test')
-            # 需要提示，如果该文件夹已经存在，存在覆盖历史数据的可能
             if not os.path.exists(self.callback_save_path):
                 os.mkdir(self.callback_save_path)
             print(f'Test saving dir:{self.callback_save_path}')
+
         self.print_args()
 
 
@@ -245,7 +248,7 @@ class Ped_Classifier():
                 raise ValueError(f'The type of image operator evokes error, current:{self.opts.operator}')
 
         # ********** 数据准备 **********    augmentation_train
-        self.train_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='train.txt')
+        self.train_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='augmentation_train.txt')
         self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.batch_size, shuffle=True)
 
         self.val_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='val.txt')
@@ -562,7 +565,7 @@ class Ped_Classifier():
         print('-' * 20 + 'Validation Info' + '-' * 20)
         print('Total Val Samples:', len(self.val_dataset))
 
-        for EPOCH in range(self.start_epoch, self.opts.epochs):
+        for EPOCH in range(self.start_epoch, self.opts.max_epochs):
             print('=' * 30 + ' begin EPOCH ' + str(EPOCH + 1) + '=' * 30)
             train_epoch_info = self.train_one_epoch()
             val_epoch_info = self.val_on_epoch_end()

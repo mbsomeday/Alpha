@@ -239,13 +239,17 @@ class Ped_Classifier():
 
         # ********** blur，fade，等操作 **********
         if self.opts.beta > 0.0:
-            if self.opts.operator.lower() == 'fade':
-                self.image_operator = Blur_Image_Patch(model_obj=self.opts.ds_model_obj, ds_weights_path=self.opts.ds_weights_path)
-            elif self.opts.operator.lower() == 'blur':
-                # self.image_operator = Blur_Image_Patch(model_obj=self.opts.ds_model_obj, ds_weights_path=self.opts.ds_weights_path)
-                print('test blur')
-            else:
-                raise ValueError(f'The type of image operator evokes error, current:{self.opts.operator}')
+            # 这里直接加载处理好的fade images
+            self.operated_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.opt_key_path, txt_name='augmentation_train.txt')
+            self.operated_loader = DataLoader(self.operated_dataset, batch_size=self.opts.batch_size, shuffle=True)
+
+            # if self.opts.operator.lower() == 'fade':
+            #     self.image_operator = Blur_Image_Patch(model_obj=self.opts.ds_model_obj, ds_weights_path=self.opts.ds_weights_path)
+            # elif self.opts.operator.lower() == 'blur':
+            #     # self.image_operator = Blur_Image_Patch(model_obj=self.opts.ds_model_obj, ds_weights_path=self.opts.ds_weights_path)
+            #     print('test blur')
+            # else:
+            #     raise ValueError(f'The type of image operator evokes error, current:{self.opts.operator}')
 
         # ********** 数据准备 **********    augmentation_train
         self.train_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='augmentation_train.txt')
@@ -402,6 +406,8 @@ class Ped_Classifier():
             loss_org = self.loss_fn(logits_org, ped_labels)
 
             if self.opts.beta > 0.0:
+
+
                 fade_images = self.image_operator(images)
                 logits_opered = self.ped_model(fade_images)
                 pred_opered = torch.argmax(logits_opered, 1)
@@ -579,7 +585,7 @@ class Ped_Classifier():
             self.update_learning_rate(EPOCH)
 
             if self.early_stopping.early_stop:
-                if EPOCH < (20 + self.opts.patience):
+                if EPOCH < (30 + self.opts.patience):
                     self.early_stopping.counter -= 8
                     self.early_stopping.early_stop = False
                     print(f'Stopped to early (at {EPOCH}), still training')

@@ -10,17 +10,17 @@ from training.training_template import Ped_Classifier
 from configs.pedCls_args import BaseArgs, TrainArgs, TestArgs
 
 
-# opts = TestArgs().parse()
-# ped_cls = Ped_Classifier(opts=opts)
-# ped_cls.test()
+opts = TestArgs().parse()
+ped_cls = Ped_Classifier(opts=opts)
+ped_cls.test()
 
 
 # from test_func.ds_cls import test_ds_classifier
-def get_opts():
-    parser = argparse.ArgumentParser()
-    """Define the common options that are used in both training and test."""
-    parser.add_argument('--weights_path', type=str)
-    return parser.parse_args()
+# def get_opts():
+#     parser = argparse.ArgumentParser()
+#     """Define the common options that are used in both training and test."""
+#     parser.add_argument('--weights_path', type=str)
+#     return parser.parse_args()
 #
 # opts = get_opts()
 # weights_path = opts.weights_path

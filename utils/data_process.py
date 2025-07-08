@@ -168,11 +168,13 @@ def write_aug_train(base_dir):
     for cls in cls_names:
         cls_dir = os.path.join(aug_dir, cls)
         image_list = os.listdir(cls_dir)
+        cls_suffix = ' 0\n' if cls == 'nonPedestrian' else ' 1\n'
         for img_name in image_list:
-            img_path = os.path.join(cls, img_name)
-            msg = img_path + ' 0\n' if cls == 'nonPedestrian' else img_path + ' 1\n'
+            img_path = os.path.join('augmentation_train', cls, img_name)
+            msg = img_path + cls_suffix
             info_list.append(msg)
     aug_train_path = os.path.join(base_dir, 'dataset_txt', 'augmentation_train.txt')
+    print(f'向{aug_train_path}写入{len(info_list)}条数据。')
     with open(aug_train_path, 'a') as f:
         for item in info_list:
             f.write(item)

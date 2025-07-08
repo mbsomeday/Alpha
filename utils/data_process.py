@@ -5,17 +5,23 @@ import os, random, shutil
 from tqdm import tqdm
 
 
+
+
+
+
+
+
 def write_to_txt(sample_list, txt_path):
     '''
         将内容写到txt文件中
     '''
     with open(txt_path, 'a') as f:
         for item in sample_list:
-            f.write(item + '\n')
+            f.write(item)
     print(f'成功写入{len(sample_list)}个样本到{txt_path}!')
 
 
-def split_smaples(base_dir, num, sample_list):
+def split_smaples(txt_dir, num, sample_list):
     '''
         将samples按比例划分为train/val/test
     '''
@@ -24,32 +30,46 @@ def split_smaples(base_dir, num, sample_list):
         'val.txt': 0.2,
         'test.txt': 0.2
     }
+
     for idx, set_name in enumerate(set_dir.keys()):
         set_num = int(set_dir[set_name] * num)
-        txt_path = os.path.join(base_dir, 'dataset_txt', set_name)
+        txt_path = os.path.join(txt_dir, set_name)
         save_sample = sample_list[: set_num]
         sample_list = sample_list[set_num: ]
         write_to_txt(save_sample, txt_path)
 
 
-def split_dataset(base_dir, num):
+def split_dataset(image_dir, num=None):
     '''
 
     :param base_dir:
     :param num:
     :return:
     '''
-    print(f'base_dir:{base_dir}')
+    images = os.listdir(image_dir)
+    if num is None:
+        num = len(images)
 
-    cls_list = ['pedestrian', 'nonPedestrian']
+    print(f'total num:{num}')
 
-    for cls_name in cls_list:
-        cls_dir = os.path.join(base_dir, cls_name)
-        sample_list = [os.path.join(cls_name, img_name) + ' 1' if cls_name == 'pedestrian' else os.path.join(cls_name, img_name) + ' 0' for img_name in os.listdir(cls_dir) ]
-        random.shuffle(sample_list)
-        split_smaples(base_dir, num, sample_list)
+    cls = image_dir.split(os.sep)[-1]
+    print(cls)
+    label = '1' if cls == 'pedestrian' else '0'
+    info_list = []
+    for img_name in images:
+        contents = [os.path.join(cls, img_name), label]
+        msg = ' '.join(contents) + '\n'
+        info_list.append(msg)
 
-        # break
+    txt_dir = image_dir.replace(cls, 'dataset_txt')
+    split_smaples(txt_dir, num, sample_list=info_list)
+
+    # for cls_name in cls_list:
+    #     cls_dir = os.path.join(base_dir, cls_name)
+    #     sample_list = [os.path.join(cls_name, img_name) + 'pedestrian 1' if cls_name == 'pedestrian' else os.path.join(cls_name, img_name) + 'nonPedestrian 0' for img_name in os.listdir(cls_dir)]
+    #     random.shuffle(sample_list)
+    #     split_smaples(base_dir, num, sample_list)
+
 
 
 def gather_images(image_list, dest_dir, num):
@@ -62,8 +82,6 @@ def gather_images(image_list, dest_dir, num):
         image_contenst = image_path.split('\\')
         cp_to_path = os.path.join(dest_dir, image_contenst[-1])
         shutil.copy(image_path, cp_to_path)
-
-
 
 '''
     根据bbox的IoU进行filter
@@ -139,28 +157,44 @@ def filter_bboxes_by_iou(bbox_list, iou_threshold=0.5):
 
 
 
+def write_aug_train(base_dir):
+    '''
+        将目标数据集的aug写入augmentation_train.txt中
+    '''
+    info_list = []
+    aug_dir = os.path.join(base_dir, 'augmentation_train')
+    cls_names = os.listdir(aug_dir)
+
+    for cls in cls_names:
+        cls_dir = os.path.join(aug_dir, cls)
+        image_list = os.listdir(cls_dir)
+        for img_name in image_list:
+            img_path = os.path.join(cls, img_name)
+            msg = img_path + ' 0\n' if cls == 'nonPedestrian' else img_path + ' 1\n'
+            info_list.append(msg)
+    aug_train_path = os.path.join(base_dir, 'dataset_txt', 'augmentation_train.txt')
+    with open(aug_train_path, 'a') as f:
+        for item in info_list:
+            f.write(item)
+
+
 
 if __name__ == '__main__':
     random.seed(13)
 
-
-
-    org_dir = r'D:\my_phd\dataset\Stage6\stage6_ecp\noPed_day'
-    dest_dir = r'D:\my_phd\dataset\Stage6\stage6_ecp\nonPedestrian'
-    num = 2375
-
-    # image_list = [os.path.join(org_dir, img_path) for img_path in os.listdir(org_dir)]
-    # print(f'共{len(image_list)}个sample,{image_list[:5]}\n')
-    # random.shuffle(image_list)
-    # print(f'打乱后：{image_list[:5]}')
-
-    # gather_images(image_list, dest_dir, num)
-
     '''
         划分train/val/test 
     '''
-    base_dir = r'D:\my_phd\dataset\Stage6\stage6_ecp'
-    split_dataset(base_dir, num=4500)
+    # image_dir = r'D:\my_phd\dataset\Stage6\stage6_ecp\pedestrian'
+    # split_dataset(image_dir)
+
+    '''
+        写入augmentation train
+    '''
+    base_dir = r'D:\my_phd\dataset\Stage6\stage6_bdd100k'
+    write_aug_train(base_dir)
+
+
 
 
 

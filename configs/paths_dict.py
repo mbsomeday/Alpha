@@ -77,6 +77,13 @@ KAGGLE = {
 
         'D4': r'/kaggle/input/stage6-dataset-bdd100k',
     },
+
+    'Stage6_fade': {
+        'D1': r'/kaggle/input/stage6-dataset-ecp',
+
+    },
+
+
     'org_dataset': {
         'D1': r'/kaggle/input/stage4-d1-ecpdaytime-7augs',
         'D2': r'/kaggle/input/stage4-d2-citypersons-7augs',

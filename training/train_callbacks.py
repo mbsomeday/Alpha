@@ -14,6 +14,7 @@ class EarlyStopping():
                  patience=10,
                  delta=0.00001):
         '''
+        callback_save_path: 保存模型的文件夹
         :param top_k: 保存几个最好模型
         :param patience: 当监控的 metric 连续 patience 个 epoch 不增加，则触发early stopping
         :param delta: 监控metric增加的最小值，当超过该值的时候表示模型有进步
@@ -25,6 +26,10 @@ class EarlyStopping():
         self.save_prefix = callback_save_path.split(os.sep)[-1]
         self.cur_epoch = cur_epoch
         self.best_monitor_metric = best_monitor_metric
+        if self.best_monitor_metric < 0:
+            self.monitored_metric = 'balanced_accuracy'
+        else:
+            self.monitored_metric = 'loss'
 
         self.patience = patience
         self.counter = 0            # 记录loss不变的epoch数目
@@ -32,7 +37,7 @@ class EarlyStopping():
         self.delta = delta
 
         print('-' * 20 + 'Early Stopping Info' + '-' * 20)
-        print('Create early stopping, monitoring [validation balanced accuracy] changes')
+        print(f'Create early stopping, monitoring [validation {self.monitored_metric}] changes')
         print(f'The best {self.top_k} models will be saved to {self.model_save_dir}')
         print(f'File saving format: {self.save_prefix}_epoch_acc.pth')
         print(f'Early Stop with patience: {self.patience}')
@@ -42,20 +47,32 @@ class EarlyStopping():
             f.write(msg)
 
     def __call__(self, epoch, model, optimizer, val_epoch_info, scheduler=None):
-        '''
-            目的是monitor总体及各类别的accuracy
-        '''
+
         self.cur_epoch = epoch
         cur_lr = optimizer.param_groups[0]['lr']
         print(f'Current lr: {cur_lr}')
 
-        if val_epoch_info.balanced_accuracy < self.best_monitor_metric + self.delta:       # 表现没有提升的情况
-            self.counter += 1
-            print(f'EarlyStopping counter: {self.counter} / {self.patience}')
-        else:       # 表现提升
-            metrics = [self.best_monitor_metric, val_epoch_info.balanced_accuracy]
-            self.save_checkpoint(model=model, metrics=metrics, optimizer=optimizer, ckpt_dir=self.model_save_dir, scheduler=scheduler)
-            self.counter = 0
+        # 监控指标为准确率的情况
+        if self.monitored_metric == 'balanced_accuracy':
+            if val_epoch_info.balanced_accuracy < self.best_monitor_metric + self.delta:       # 表现没有提升的情况
+                self.counter += 1
+                print(f'EarlyStopping counter: {self.counter} / {self.patience}')
+            else:       # 表现提升
+                metrics = [self.best_monitor_metric, val_epoch_info.balanced_accuracy]
+                self.save_checkpoint(model=model, metrics=metrics, optimizer=optimizer, ckpt_dir=self.model_save_dir, scheduler=scheduler)
+                self.counter = 0
+
+        # 监控指标为loss的情况
+        elif self.monitored_metric == 'loss':
+            if val_epoch_info.loss > self.best_monitor_metric + self.delta:    # 表现没有提升的情况
+                self.counter += 1
+                print(f'EarlyStopping counter: {self.counter} / {self.patience}')
+            else:
+                metrics = [self.best_monitor_metric, val_epoch_info.loss]
+                self.save_checkpoint(model=model, metrics=metrics, optimizer=optimizer, ckpt_dir=self.model_save_dir, scheduler=scheduler)
+                self.counter = 0
+        else:
+            raise ValueError('Wrong monitored metrics!')
 
         # 根据counter判断是否设置停止flag
         if self.counter >= self.patience:
@@ -90,7 +107,7 @@ class EarlyStopping():
 
 
     def save_checkpoint(self, model, metrics, optimizer, ckpt_dir, scheduler=None):
-        print(f'Performance increases ({metrics[0]} --> {metrics[1]}). Saving Model.')
+        print(f'Performance [{self.monitored_metric}] better ({metrics[0]} --> {metrics[1]}). Saving Model.')
 
         self.del_redundant_weights(ckpt_dir)
         save_name = f"{self.save_prefix}-{self.cur_epoch:02d}-{metrics[1]:.5f}.pth"     # 格式：prefix_{epoch}_{balanced_acc}.pth

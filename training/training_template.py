@@ -384,7 +384,7 @@ class Ped_Classifier():
         epoch_info['balanced_accuracy'] = balanced_accuracy
         epoch_info['loss'] = loss
 
-        msg = f'Overall accuracy: {accuracy:.6f}, Overall balanced accuracy:{balanced_accuracy:.6f}, loss:{loss}' + show_info01
+        msg = f'Overall accuracy: {accuracy:.6f}, Overall balanced accuracy:{balanced_accuracy:.6f}, loss:{loss:.8f}' + show_info01
 
         print('-' * 30, str(info_type) + ' Info' + '-' * 30)
         print(msg)
@@ -484,7 +484,7 @@ class Ped_Classifier():
             'balanced_accuracy': val_bc,
             'loss': val_loss
         }
-        print(f'Validation accuracy:{val_accuracy}, balanced_accuracy:{val_bc}, loss:{val_loss}')
+        print(f'Validation accuracy:{val_accuracy:.6f}, balanced_accuracy:{val_bc:.6f}, loss:{val_loss:.8f}')
 
         return DotDict(val_epoch_info)
 

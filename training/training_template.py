@@ -484,6 +484,7 @@ class Ped_Classifier():
             'balanced_accuracy': val_bc,
             'loss': val_loss
         }
+        print(f'Validation accuracy:{val_accuracy}, balanced_accuracy:{val_bc}, loss:{val_loss}')
 
         return DotDict(val_epoch_info)
 

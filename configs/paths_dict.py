@@ -74,8 +74,8 @@ LOCAL = {
 KAGGLE = {
     'Stage6_org': {
         'D1': r'/kaggle/input/stage6-dataset-ecp',
-
-        'D4': r'/kaggle/input/stage6-dataset-bdd100k',
+        'D2': r'/kaggle/input/stage6-dataset-citypersons',
+        'D3': r'/kaggle/input/stage6-dataset-bdd100k',
     },
 
     'Stage6_fade': {

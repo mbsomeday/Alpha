@@ -278,7 +278,7 @@ class Ped_Classifier():
 
         # ********** callbacks **********
         self.early_stopping = EarlyStopping(self.callback_save_path, top_k=self.opts.top_k, cur_epoch=self.start_epoch, patience=self.opts.patience,
-                                            best_monitor_metric=self.best_val_loss)
+                                            best_monitor_metric=self.best_val_bc)
 
         train_num_info = [len(self.train_dataset), self.train_nonPed_num, self.train_ped_num]
         val_num_info = [len(self.val_dataset), self.val_nonPed_num, self.val_ped_num]

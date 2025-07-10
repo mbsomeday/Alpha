@@ -502,7 +502,7 @@ class Ped_Classifier():
             f.write('ds_name, test_ba, tnr, tpr, tn, fp, fn, tp\n')
 
         for ds_name in self.opts.ds_name_list:
-            test_dataset = my_dataset(ds_name_list=[ds_name], path_key=self.opts.data_key, txt_name='val.txt')
+            test_dataset = my_dataset(ds_name_list=[ds_name], path_key=self.opts.data_key, txt_name='test.txt')
             test_loader = DataLoader(test_dataset, batch_size=self.opts.batch_size, shuffle=False)
 
             y_true = []

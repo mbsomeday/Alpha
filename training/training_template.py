@@ -252,7 +252,7 @@ class Ped_Classifier():
             #     raise ValueError(f'The type of image operator evokes error, current:{self.opts.operator}')
 
         # ********** 数据准备 **********    augmentation_train
-        self.train_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='augmentation_train.txt')
+        self.train_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='train.txt')
         self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.batch_size, shuffle=True)
 
         self.val_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='val.txt')

@@ -272,8 +272,8 @@ class Ped_Classifier():
             self.reload()
         else:
             self.start_epoch = 0
-            # self.best_val_bc = -np.inf  # 监控balanced accuracy
-            self.best_val_loss = np.inf # 监控loss
+            self.best_val_bc = -np.inf  # 监控balanced accuracy
+            # self.best_val_loss = np.inf # 监控loss
             self.ped_model = self.init_model(self.ped_model)
 
         # ********** callbacks **********

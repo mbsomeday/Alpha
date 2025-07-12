@@ -28,13 +28,18 @@ def get_args():
     parser.add_argument('--top_k', type=int, default=3)
     parser.add_argument('--patience', type=int, default=10)
 
+    # test
+    parser.add_argument('--ds_weights_path', type=str, default=None)
+    parser.add_argument('--test_batch_size', type=int, default=128)
+
     args = parser.parse_args()
 
     return args
 
 opts = get_args()
 ds_model = ds_classifier(opts)
-ds_model.train()
+# ds_model.train()
+ds_model.test()
 
 '''
 训练ped classifier

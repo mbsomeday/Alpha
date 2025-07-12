@@ -146,12 +146,89 @@ class my_dataset(Dataset):
 
 
 
-class multImage_dataset(Dataset):
-    def __init__(self):
-        pass
+class operated_dsimages(Dataset):
+    '''
+        读取org image和fade images，仅限augmentation_train
+    '''
+    def __init__(self, ds_name_list, path_key):
+        self.ds_name_list = ds_name_list
+        self.ds_label_list = []
+        self.path_key = path_key
+        for ds_name in ds_name_list:
+            self.ds_label_list.append(int(ds_name[1]) - 1)
+        self.txt_name = 'augmentation_train.txt'
+        self.img_transforms = transforms.Compose([
+            transforms.ToTensor(),
+        ])
+        self.org_images, self.operated_images, self.ped_labels = self.init_ImagesLabels()
+        print(f'Get dataset: {ds_name_list}, txt_name: {self.txt_name}, total {len(self.org_images)} images')
 
     def __len__(self):
-        pass
+        return len(self.org_images)
+
+    def init_ImagesLabels(self):
+        org_images, operated_image, ped_labels = [], [], []
+        for ds_idx, ds_name in enumerate(self.ds_name_list):
+
+            ds_dir = PATHS[self.path_key][ds_name]
+            txt_path = os.path.join(ds_dir, 'dataset_txt', self.txt_name)
+            print(f'Lodaing {txt_path}')
+
+            with open(txt_path, 'r') as f:
+                data = f.readlines()
+
+            for data_idx, line in enumerate(data):
+                line = line.replace('\\', os.sep)
+                line = line.strip()
+                contents = line.split()
+
+                org_image_path = os.path.join(ds_dir, contents[0])
+                operated_img_path = org_image_path.replace('augmentation_train', 'fade_aug_train')
+
+                org_images.append(org_image_path)
+                operated_image.append(operated_img_path)
+                ped_labels.append(contents[-1])
+
+        return org_images, operated_image, ped_labels
+
+    def get_ped_cls_num(self):
+        '''
+            获取行人和非行人类别的数量
+        '''
+        nonPed_num, ped_num = 0, 0
+        for item in self.ped_labels:
+            if item == '0':
+                nonPed_num += 1
+            elif item == '1':
+                ped_num += 1
+        return nonPed_num, ped_num
+
+    def __getitem__(self, idx):
+        org_image_path = self.org_images[idx]
+        ope_image_path = self.operated_images[idx]
+        ped_label = self.ped_labels[idx]
+
+
+        # 读取 org_image 和 operated image
+        org_image = Image.open(org_image_path).convert('RGB')
+        org_image = self.img_transforms(org_image)
+        operated_image = Image.open(ope_image_path).convert('RGB')
+        operated_image = self.img_transforms(operated_image)
+        ped_label = np.array(ped_label).astype(np.int64)
+
+        image_name = org_image_path.split(os.sep)[-1]
+
+        image_dict = {
+            'image': org_image,
+            'img_name': image_name,
+            'img_path': org_image_path,
+            'ped_label': ped_label,
+            'ope_image': operated_image
+        }
+
+        return image_dict
+
+
 
 
 def get_data(ds_name_list, path_key, txt_name, batch_size, shuffle=True):
@@ -259,34 +336,15 @@ class dataset_clip(Dataset):
 
 
 if __name__ == '__main__':
-    image_path = r'img.jpg'
-    image = Image.open(image_path)
-    img_transform = RandomAug()
-    aug_image = img_transform(image)
-    plt_transformer = transforms.ToPILImage(aug_image)
+    get_dataset = operated_dsimages(ds_name_list=['D3'], path_key='Stage6_org')
+    get_loader = DataLoader(get_dataset, batch_size=4, shuffle=False)
 
-    plt.figure()
-    plt.subplot(121)
-    plt.imshow(image)
-    plt.subplot(122)
-    plt.imshow(aug_image)
-    plt.show()
+    for idx, data in enumerate(get_loader):
+        print(data.keys())
+
+        break
 
 
-
-    # ds_name_list = list(['D3'])
-    # path_key = 'org_dataset'
-    # txt_name = 'val.txt'
-    # batch_size = 8
-    # shuffle = True
-#     # ds = my_dataset(ds_name_list, path_key, txt_name)
-    # val_dataset, val_loader = get_data(ds_name_list, path_key, txt_name, batch_size, shuffle)
-    # for idx, data_dict in enumerate(val_loader):
-    #     images = data_dict['image']
-    #     ds_label = data_dict['ds_label']
-    #     img_paths = data_dict['img_path']
-    #     ped_label = data_dict['ped_label']
-    #     break
 
 
 

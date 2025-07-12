@@ -15,7 +15,7 @@ from tqdm import tqdm
 from tqdm import tqdm
 
 from utils.utils import DEVICE, get_obj_from_str, load_model, DotDict, TemporaryGrad
-from data.dataset import my_dataset
+from data.dataset import my_dataset, operated_dsimages
 
 # if torch.cuda.is_available():
 #     from training.train_callbacks import EarlyStopping, Model_Logger      # remote
@@ -237,23 +237,15 @@ class Ped_Classifier():
         if not os.path.exists(self.callback_save_path):
             os.mkdir(self.callback_save_path)
 
-        # ********** blur，fade，等操作 **********
+        # ********** 分情况的数据准备 **********    augmentation_train
         if self.opts.beta > 0.0:
-            # 这里直接加载处理好的fade images
-            self.operated_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.opt_key_path, txt_name='augmentation_train.txt')
-            self.operated_loader = DataLoader(self.operated_dataset, batch_size=self.opts.batch_size, shuffle=True)
+            # 这里直接加载处理好的 org images 和 fade images
+            self.train_dataset = operated_dsimages(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key)
+            self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.batch_size, shuffle=True)
+        else:
 
-            # if self.opts.operator.lower() == 'fade':
-            #     self.image_operator = Blur_Image_Patch(model_obj=self.opts.ds_model_obj, ds_weights_path=self.opts.ds_weights_path)
-            # elif self.opts.operator.lower() == 'blur':
-            #     # self.image_operator = Blur_Image_Patch(model_obj=self.opts.ds_model_obj, ds_weights_path=self.opts.ds_weights_path)
-            #     print('test blur')
-            # else:
-            #     raise ValueError(f'The type of image operator evokes error, current:{self.opts.operator}')
-
-        # ********** 数据准备 **********    augmentation_train
-        self.train_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='train.txt')
-        self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.batch_size, shuffle=True)
+            self.train_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='augmentation.txt')
+            self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.batch_size, shuffle=True)
 
         self.val_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='val.txt')
         self.val_loader = DataLoader(self.val_dataset, batch_size=self.opts.batch_size, shuffle=False)
@@ -399,17 +391,16 @@ class Ped_Classifier():
         opered_dict = self.inif_pred_info() if self.opts.beta > 0.0 else None
 
         for batch_idx, data in enumerate(tqdm(self.train_loader)):
-            images = data['image'].to(DEVICE)
+            org_images = data['image'].to(DEVICE)
             ped_labels = data['ped_label'].to(DEVICE)
 
-            logits_org = self.ped_model(images)
+            logits_org = self.ped_model(org_images)
             pred_org = torch.argmax(logits_org, 1)
             loss_org = self.loss_fn(logits_org, ped_labels)
 
             if self.opts.beta > 0.0:
-
-                fade_images = self.image_operator(images)
-                logits_opered = self.ped_model(fade_images)
+                operated_images = data['ope_image']
+                logits_opered = self.ped_model(operated_images)
                 pred_opered = torch.argmax(logits_opered, 1)
                 loss_opered = self.loss_fn(logits_opered, ped_labels)
 
@@ -418,6 +409,7 @@ class Ped_Classifier():
             else:
                 loss_value = loss_org
 
+            # 反向传播
             self.optimizer.zero_grad()
             loss_value.backward()
             self.optimizer.step()

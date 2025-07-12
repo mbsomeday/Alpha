@@ -21,6 +21,7 @@ def get_args():
     parser.add_argument('--base_lr', type=float, default=0.01)
     parser.add_argument('--isTrain', action='store_true')
     parser.add_argument('--max_epochs', type=int, default=100)
+    parser.add_argument('--warmup_epochs', type=int, default=3)
 
     # callbacks
     parser.add_argument('--top_k', type=int, default=3)

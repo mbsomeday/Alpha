@@ -8,7 +8,7 @@ import torch, os
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
 from tqdm import tqdm
-from torchcam.methods.gradient import GradCAM
+# from torchcam.methods.gradient import GradCAM
 
 from utils import load_model, TemporaryGrad, save_image_tensor
 
@@ -29,8 +29,8 @@ class gen_fade_images():
         # self.sigma = 0.25
         # self.omega = 100
 
-        # 用torchcam
-        self.cam_operator = GradCAM(self.ds_model, target_layer=self.grad_layer)
+        # # 用torchcam
+        # self.cam_operator = GradCAM(self.ds_model, target_layer=self.grad_layer)
 
         # 数据
         self.get_dataset = my_dataset(ds_name_list=args.ds_name_list, path_key='Stage6_org', txt_name=args.txt_name)

@@ -1,5 +1,4 @@
 import argparse, os
-from torch.utils.data import DataLoader
 
 from utils.gen_fade_images import gen_fade_images
 

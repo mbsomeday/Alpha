@@ -72,7 +72,8 @@ class gen_fade_images():
             image = data_dict['image']
             img_name = data_dict['img_name'][0]
             img_path = data_dict['img_path']
-            contents = img_path[0].split('\\')
+            img_path[0].replace('\\', os.sep)
+            contents = img_path[0].split(os.sep)
             cls_name = contents[-2]
 
             fade_img_save_path = os.path.join(self.img_save_dir, cls_name, img_name)

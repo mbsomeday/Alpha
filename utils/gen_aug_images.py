@@ -50,10 +50,6 @@ class random_aimage_aug():
         img = F.gaussian_blur(img, kernel_size=[5, 5], sigma=[sigma, sigma])
         return img
 
-    # def posterize(self, img):
-    #     bits = random.randint(3, 6)
-    #     img = F.posterize(img, bits)
-    #     return img
 
     def __call__(self):
 
@@ -81,62 +77,14 @@ class random_aimage_aug():
             aug_image = aug_method(org_image)
             save_image_tensor(aug_image, save_aug_path)
 
-            break
+            # break
 
-
-
-
-def image_aug(base_dir):
-    get_dataset = my_dataset(ds_name_list=['D4'], path_key='Stage6_org', txt_name='train.txt')
-    get_loader = DataLoader(get_dataset, batch_size=1, shuffle=False)
-
-    plt_transform = transforms.ToPILImage()
-    bright_transform = transforms.transforms.ColorJitter(brightness=0.2)
-
-    for idx, data_dict in enumerate(tqdm(get_loader)):
-        # print(data_dict.keys())
-
-        images = data_dict['image']
-        image_paths = data_dict['img_path']
-        path_contenst = image_paths[0].split(os.sep)
-        image_name = path_contenst[-1]
-
-        # img_flip = F.hflip(images)
-        # flip_name = image_name.split('.')[0] + '_flip.jpg'
-        # img_flip_save_path = os.path.join(base_dir, 'augmentation_train', path_contenst[-2], flip_name)
-        # save_image_tensor(img_flip, img_flip_save_path)
-
-        img_bright = bright_transform(images)
-        bright_name = image_name.split('.')[0] + '_bright.jpg'
-        img_bright_save_path = os.path.join(base_dir, 'augmentation_train', path_contenst[-2], bright_name)
-        save_image_tensor(img_bright, img_bright_save_path)
-
-        org_image_save_path = os.path.join(base_dir, 'augmentation_train', path_contenst[-2], image_name)
-        save_image_tensor(images, org_image_save_path)
-        # print(org_image_save_path)
-
-
-
-        # plt.figure()
-        # plt.subplot(131)
-        # plt.title('org')
-        # plt.imshow(plt_transform(images[0]))
-        # plt.subplot(132)
-        # plt.title('flip')
-        # plt.imshow(plt_transform(img_flip[0]))
-        # plt.subplot(133)
-        # plt.title('brightness')
-        # plt.imshow(plt_transform(img_bright[0]))
-        # plt.show()
-
-        # break
-        # break
 
 if __name__ == '__main__':
     # img_path = r'D:\my_phd\on_git\DatasetBias\data\img.jpg'
     # img = Image.open(img_path).convert('RGB')
 
-    ww_rand = random_aimage_aug(ds_name_list=['D4'], path_key='Stage6_org', save_dir=r'D:\my_phd\dataset\Stage6\stage6_bdd100k\augmentation_train')
+    ww_rand = random_aimage_aug(ds_name_list=['D2'], path_key='Stage6_org', save_dir=r'D:\my_phd\dataset\Stage6\stage6_citypersons\augmentation_train')
     ww_rand()
 
 

@@ -399,7 +399,7 @@ class Ped_Classifier():
             loss_org = self.loss_fn(logits_org, ped_labels)
 
             if self.opts.beta > 0.0:
-                operated_images = data['ope_image']
+                operated_images = data['ope_image'].to(DEVICE)
                 logits_opered = self.ped_model(operated_images)
                 pred_opered = torch.argmax(logits_opered, 1)
                 loss_opered = self.loss_fn(logits_opered, ped_labels)

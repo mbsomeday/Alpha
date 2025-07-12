@@ -716,6 +716,8 @@ class ds_classifier():
         self.ds_model.eval()
         val_correct_num = 0.0
         val_loss = 0
+        y_true = []
+        y_pred = []
 
         with torch.no_grad():
             for batch_idx, data in enumerate(tqdm(self.val_loader)):
@@ -723,14 +725,20 @@ class ds_classifier():
                 ds_labels = data['ds_label'].to(DEVICE)
 
                 logits = self.ds_model(images)
-                pred = torch.argmax(logits, 1)
+                preds = torch.argmax(logits, 1)
                 loss_value = self.loss_fn(logits, ds_labels)
 
                 val_loss += loss_value.item()
-                val_correct_num += (pred == ds_labels).sum()
+                val_correct_num += (preds == ds_labels).sum()
+
+                y_true.extend(ped_labels.cpu().numpy())
+                y_pred.extend(preds.cpu().numpy())
 
         val_accuracy = val_correct_num / len(self.val_dataset)
+        val_cm = confusion_matrix(y_true, y_pred)
+
         print(f'Val loss {val_loss:.6f}, accuracy:{val_accuracy:.6f}')
+        print(val_cm)
 
         val_epoch_info = {
             'accuracy': val_accuracy,
@@ -774,6 +782,8 @@ class ds_classifier():
 
         test_loss = 0.0
         test_correct_num = 0
+        y_true = []
+        y_pred = []
 
         with torch.no_grad():
             for batch_idx, data in enumerate(tqdm(test_loader)):
@@ -781,14 +791,20 @@ class ds_classifier():
                 ds_labels = data['ds_label'].to(DEVICE)
 
                 logits = self.ds_model(images)
-                pred = torch.argmax(logits, 1)
+                preds = torch.argmax(logits, 1)
                 loss_value = self.loss_fn(logits, ds_labels)
 
                 test_loss += loss_value.item()
-                test_correct_num += (pred == ds_labels).sum()
+                test_correct_num += (preds == ds_labels).sum()
 
+                y_true.extend(ped_labels.cpu().numpy())
+                y_pred.extend(preds.cpu().numpy())
+
+
+        test_cm = confusion_matrix(y_true, y_pred)
         test_accuracy = test_correct_num / len(test_dataset)
         print(f'Test loss {test_loss:.6f}, accuracy:{test_accuracy:.6f}')
+        print(test_cm)
 
 
 

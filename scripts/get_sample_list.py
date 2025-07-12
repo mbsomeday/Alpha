@@ -15,7 +15,7 @@ from configs.paths_dict import PATHS
 
 ds_name = 'D4'
 path_key = 'org_dataset'
-txt_name = 'test.txt'
+txt_name = 'test_func.txt'
 batch_size = 1
 shuffle = False
 

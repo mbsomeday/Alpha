@@ -615,6 +615,29 @@ class ds_classifier():
         if self.opts.isTrain:
             self.training_setup()
 
+        self.print_args()
+
+    def print_args(self):
+        '''
+            参数打印 并 保存到txt文件中
+        '''
+        print('-' * 40 + ' Args ' + '-' * 40)
+
+        info = []
+        for k, v in vars(self.opts).items():
+            msg = f'{k}: {v}'
+            print(msg)
+            info.append(msg)
+
+        # 将本次实验的参数写入txt中
+        write_to_txt = os.path.join(self.callback_save_path, 'Args.txt')
+        if os.path.exists(write_to_txt):
+            os.remove(write_to_txt)
+        with open(write_to_txt, 'a') as f:
+            for item in info:
+                f.write(item+'\n')
+
+
     def training_setup(self):
         # ********** 模型初始化 **********
         self.init_model(self.ds_model)

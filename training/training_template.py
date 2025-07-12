@@ -595,8 +595,177 @@ class Ped_Classifier():
                     break
 
 
-            # if EPOCH == 2:
-            #     break
+
+
+
+class ds_classifier():
+    '''
+        用new D1/D2/D3 训练ds model
+    '''
+    def __init__(self, opts):
+        # 确保在服务器运行时只用一个GPU
+        if torch.cuda.is_available():
+            if torch.cuda.device_count() > 1:
+                raise RuntimeError('More than one GPU')
+            else:
+                print(f'Runing on {torch.cuda.get_device_name(0)} GPU')
+
+        self.opts = opts
+        self.ds_model = get_obj_from_str(self.opts.ds_model_obj)(num_class=3).to(DEVICE)
+        if self.opts.isTrain:
+            self.training_setup()
+
+    def training_setup(self):
+        # ********** 模型初始化 **********
+        self.init_model(self.ds_model)
+        # ********** 数据准备 **********    augmentation_train
+        self.train_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='train.txt')
+        self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.batch_size, shuffle=True)
+
+        self.val_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='val.txt')
+        self.val_loader = DataLoader(self.val_dataset, batch_size=self.opts.batch_size, shuffle=False)
+
+        # ********** loss & scheduler **********
+        self.optimizer = torch.optim.RMSprop(self.ds_model.parameters(), lr=self.opts.base_lr, weight_decay=1e-5, eps=0.001)
+        self.loss_fn = torch.nn.CrossEntropyLoss()
+
+        # ********** callbacks **********
+        self.callback_save_dir = 'dsCls' + ''.join(self.opts.ds_name_list)
+        self.callback_save_path = os.path.join(os.getcwd(), self.callback_save_dir)
+        self.start_epoch = 0
+        self.best_val_loss = np.inf  # 监控loss
+        self.early_stopping = EarlyStopping(self.callback_save_path, top_k=self.opts.top_k, cur_epoch=self.start_epoch, patience=self.opts.patience,
+                                            best_monitor_metric=self.best_val_loss)
+
+    def init_model(self, model):
+        '''
+            对模型权重进行初始化，保障多次训练结果变动不会变化太大
+            适用 kaiming init，suitable for ReLU
+            初始化种类参考： https://blog.csdn.net/shanglianlm/article/details/85165523
+        '''
+        for m in model.modules():
+            if isinstance(m, (nn.Conv2d, nn.Linear)):
+                # nn.init.kaiming_normal_(m.weight, mode='fan_in', nonlinearity='relu')  # 或 kaiming_uniform_
+                nn.init.orthogonal_(m.weight)     # 正交初始化
+                if m.bias is not None:
+                    nn.init.zeros_(m.bias)
+
+        return model
+
+    def update_learning_rate(self, epoch):
+        old_lr = self.optimizer.param_groups[0]['lr']
+
+        # warm-up阶段
+        if epoch <= self.opts.warmup_epochs:  # warm-up阶段
+            self.optimizer.param_groups[0]['lr'] = self.opts.base_lr * epoch / self.opts.warmup_epochs
+        else:
+            self.optimizer.param_groups[0]['lr'] = self.opts.base_lr * 0.963 ** (epoch / 3)  # gamma=0.963, lr decay epochs=3
+
+        lr = self.optimizer.param_groups[0]['lr']
+        print('learning rate %.7f -> %.7f' % (old_lr, lr))
+
+    def train_one_epoch(self):
+        self.ds_model.train()
+        epoch_loss = 0.0
+        correct_num = 0
+
+        for batch_idx, data in enumerate(tqdm(self.train_loader)):
+            images = data['image'].to(DEVICE)
+            ds_labels = data['ds_label'].to(DEVICE)
+
+            logits = self.ds_model(images)
+            pred = torch.argmax(logits, 1)
+            loss_value = self.loss_fn(logits, ds_labels)
+
+            epoch_loss += loss_value.item()
+            correct_num += (pred == ds_labels).sum()
+
+            self.optimizer.zero_grad()
+            loss_value.backward()
+            self.optimizer.step()
+
+        train_accuracy = correct_num / len(self.train_dataset)
+        print(f'Training loss:{epoch_loss:.6f}, accuracy:{train_accuracy:.6f}')
+
+
+    def val_on_epoch_end(self):
+        self.ds_model.eval()
+        val_correct_num = 0.0
+        val_loss = 0
+
+        with torch.no_grad():
+            for batch_idx, data in enumerate(tqdm(self.val_loader)):
+                images = data['image'].to(DEVICE)
+                ds_labels = data['ds_label'].to(DEVICE)
+
+                logits = self.ds_model(images)
+                pred = torch.argmax(logits, 1)
+                loss_value = self.loss_fn(logits, ds_labels)
+
+                val_loss += loss_value.item()
+                val_correct_num += (pred == ds_labels).sum()
+
+        val_accuracy = val_correct_num / len(self.val_dataset)
+        print(f'Val loss {val_loss:.6f}, accuracy:{val_accuracy:.6f}')
+
+        val_epoch_info = {
+            'accuracy': val_accuracy,
+            'loss': val_loss
+        }
+        return DotDict(val_epoch_info)
+
+    def train(self):
+        print('-' * 20 + 'Training Info' + '-' * 20)
+        print('Total training Samples:', len(self.train_dataset))
+        print('Total Batch:', len(self.train_loader))
+
+        print('-' * 20 + 'Validation Info' + '-' * 20)
+        print('Total Val Samples:', len(self.val_dataset))
+        for EPOCH in range(self.start_epoch, self.opts.max_epochs):
+            print('=' * 30 + ' begin EPOCH ' + str(EPOCH + 1) + '=' * 30)
+            self.train_one_epoch()
+            val_epoch_info = self.val_on_epoch_end()
+            self.early_stopping(EPOCH + 1, self.ds_model, self.optimizer, val_epoch_info, scheduler=None)
+
+            self.update_learning_rate(EPOCH)
+
+            if self.early_stopping.early_stop:
+                if EPOCH < (20 + self.opts.patience):
+                    self.early_stopping.counter -= 8
+                    self.early_stopping.early_stop = False
+                    print(f'Stopped to early (at {EPOCH}/{25 + self.opts.patience}), still training')
+                else:
+                    print(f'Early Stopping!')
+                    break
+
+    def test(self):
+        '''
+            在 new D1/D2/D3 的test.txt上测试，展示结果但不保存
+        '''
+        self.ds_model = load_model(self.ds_model, self.opts.ds_weights_path)
+        self.ds_model.eval()
+
+        test_dataset = my_dataset(self.opts.ds_name_list, path_key=self.opts.data_key, txt_name=self.opts.txt_name)
+        test_loader = DataLoader(test_dataset, batch_size=self.opts.batch_size, shuffle=False)
+
+        test_loss = 0.0
+        test_correct_num = 0
+
+        with torch.no_grad():
+            for batch_idx, data in enumerate(tqdm(test_loader)):
+                images = data['image'].to(DEVICE)
+                ds_labels = data['ds_label'].to(DEVICE)
+
+                logits = self.ds_model(images)
+                pred = torch.argmax(logits, 1)
+                loss_value = self.loss_fn(logits, ds_labels)
+
+                test_loss += loss_value.item()
+                test_correct_num += (pred == ds_labels).sum()
+
+        test_accuracy = test_correct_num / len(test_dataset)
+        print(f'Test loss {test_loss:.6f}, accuracy:{test_accuracy:.6f}')
+
 
 
 if __name__ == '__main__':

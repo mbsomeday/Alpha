@@ -5,16 +5,47 @@ root_path = os.path.split(curPath)[0]
 sys.path.append(root_path)
 
 import argparse
+from training.training_template import ds_classifier
 
+'''
+    训练ds classifier
+'''
+def get_args():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--ds_model_obj', type=str, default='models.EfficientNet.efficientNetB0')
+    parser.add_argument('--ds_name_list', nargs='+', default=['D1', 'D2', 'D3'], help='dataset list for ds classifier')
+    parser.add_argument('--key_path', type=str, default='Stage6_org')
+    parser.add_argument('--batch_size', type=int, default=64)
+    parser.add_argument('--init_method', type=str, default='orthogonal', help='the way to initialize model weights, e.g., kaiming, orthogonal')
+    parser.add_argument('--base_lr', type=float, default=0.01)
+
+    # callbacks
+    parser.add_argument('--top_k', type=int, default=3)
+    parser.add_argument('--patience', type=int, default=10)
+
+    args = parser.parse_args()
+
+    return args
+
+opts = get_args()
+ds_model = ds_classifier(opts)
+ds_model.train()
+
+'''
+训练ped classifier
+'''
 from training.training_template import Ped_Classifier
 from configs.pedCls_args import TrainArgs
+#
+# opts = TrainArgs().parse()
+# ped_cls = Ped_Classifier(opts=opts)
+# ped_cls.train()
 
-opts = TrainArgs().parse()
-ped_cls = Ped_Classifier(opts=opts)
-ped_cls.train()
 
-
-
+'''
+    旧代码训练ds classifier
+'''
 # from training.training import train_ds_model_alpha
 # model_obj = 'models.EfficientNet.efficientNetB0'
 # ds_cls = train_ds_model_alpha(model_obj=model_obj,
@@ -26,7 +57,9 @@ ped_cls.train()
 #                               )
 # ds_cls.train_model()
 
-
+'''
+    旧代码训练ped classifier
+'''
 # from training.training import train_ped_model_alpha
 #
 #

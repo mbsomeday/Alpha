@@ -637,7 +637,6 @@ class ds_classifier():
             for item in info:
                 f.write(item+'\n')
 
-
     def training_setup(self):
         # ********** 模型初始化 **********
         self.init_model(self.ds_model)
@@ -655,6 +654,8 @@ class ds_classifier():
         # ********** callbacks **********
         self.callback_save_dir = 'dsCls' + ''.join(self.opts.ds_name_list)
         self.callback_save_path = os.path.join(os.getcwd(), self.callback_save_dir)
+        if not os.path.exists(self.callback_save_path):
+            os.mkdir(self.callback_save_path)
         self.start_epoch = 0
         self.best_val_loss = np.inf  # 监控loss
         self.early_stopping = EarlyStopping(self.callback_save_path, top_k=self.opts.top_k, cur_epoch=self.start_epoch, patience=self.opts.patience,

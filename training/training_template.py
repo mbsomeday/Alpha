@@ -780,7 +780,6 @@ class ds_classifier():
         test_dataset = my_dataset(self.opts.ds_name_list, path_key=self.opts.data_key, txt_name=self.opts.test_txt_name)
         test_loader = DataLoader(test_dataset, batch_size=self.opts.test_batch_size, shuffle=False)
 
-        test_loss = 0.0
         test_correct_num = 0
         y_true = []
         y_pred = []
@@ -792,18 +791,15 @@ class ds_classifier():
 
                 logits = self.ds_model(images)
                 preds = torch.argmax(logits, 1)
-                loss_value = self.loss_fn(logits, ds_labels)
 
-                test_loss += loss_value.item()
                 test_correct_num += (preds == ds_labels).sum()
 
                 y_true.extend(ds_labels.cpu().numpy())
                 y_pred.extend(preds.cpu().numpy())
 
-
         test_cm = confusion_matrix(y_true, y_pred)
         test_accuracy = test_correct_num / len(test_dataset)
-        print(f'Test loss {test_loss:.6f}, accuracy:{test_accuracy:.6f}')
+        print(f'Test accuracy:{test_accuracy:.6f}')
         print(test_cm)
 
 

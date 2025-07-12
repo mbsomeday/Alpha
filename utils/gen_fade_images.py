@@ -10,7 +10,7 @@ import torch.nn.functional as F
 from tqdm import tqdm
 # from torchcam.methods.gradient import GradCAM
 
-from utils import load_model, TemporaryGrad, save_image_tensor
+from utils.utils import load_model, TemporaryGrad, save_image_tensor
 
 from data.dataset import my_dataset
 

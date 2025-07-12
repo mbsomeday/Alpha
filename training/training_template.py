@@ -642,10 +642,10 @@ class ds_classifier():
         self.init_model(self.ds_model)
         # ********** 数据准备 **********    augmentation_train
         self.train_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='train.txt')
-        self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.batch_size, shuffle=True)
+        self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.train_batch_size, shuffle=True)
 
         self.val_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='val.txt')
-        self.val_loader = DataLoader(self.val_dataset, batch_size=self.opts.batch_size, shuffle=False)
+        self.val_loader = DataLoader(self.val_dataset, batch_size=self.opts.val_batch_size, shuffle=False)
 
         # ********** loss & scheduler **********
         self.optimizer = torch.optim.RMSprop(self.ds_model.parameters(), lr=self.opts.base_lr, weight_decay=1e-5, eps=0.001)

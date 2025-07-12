@@ -16,12 +16,13 @@ def get_args():
     parser.add_argument('--ds_model_obj', type=str, default='models.EfficientNet.efficientNetB0')
     parser.add_argument('--ds_name_list', nargs='+', default=['D1', 'D2', 'D3'], help='dataset list for ds classifier')
     parser.add_argument('--data_key', type=str, default='Stage6_org')
-    parser.add_argument('--batch_size', type=int, default=64)
+    parser.add_argument('--train_batch_size', type=int, default=64)
     parser.add_argument('--init_method', type=str, default='orthogonal', help='the way to initialize model weights, e.g., kaiming, orthogonal')
     parser.add_argument('--base_lr', type=float, default=0.01)
     parser.add_argument('--isTrain', action='store_true')
     parser.add_argument('--max_epochs', type=int, default=100)
     parser.add_argument('--warmup_epochs', type=int, default=3)
+    parser.add_argument('--val_batch_size', type=int, default=128)
 
     # callbacks
     parser.add_argument('--top_k', type=int, default=3)

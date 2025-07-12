@@ -731,7 +731,7 @@ class ds_classifier():
                 val_loss += loss_value.item()
                 val_correct_num += (preds == ds_labels).sum()
 
-                y_true.extend(ped_labels.cpu().numpy())
+                y_true.extend(ds_labels.cpu().numpy())
                 y_pred.extend(preds.cpu().numpy())
 
         val_accuracy = val_correct_num / len(self.val_dataset)
@@ -797,7 +797,7 @@ class ds_classifier():
                 test_loss += loss_value.item()
                 test_correct_num += (preds == ds_labels).sum()
 
-                y_true.extend(ped_labels.cpu().numpy())
+                y_true.extend(ds_labels.cpu().numpy())
                 y_pred.extend(preds.cpu().numpy())
 
 

@@ -428,7 +428,7 @@ class Ped_Classifier():
             org_dict['nonPed_acc_num'] += ((ped_labels[nonPed_idx] == pred_org[nonPed_idx]) * 1).sum()
             org_dict['ped_acc_num'] += ((ped_labels[ped_idx] == pred_org[ped_idx]) * 1).sum()
 
-            if self.opts.beta > 0.0:
+            if self.opts.beta > 0.0 or self.opts.fade_images_only:
                 opered_dict['y_pred'].extend(pred_opered.cpu().numpy())
                 opered_dict['correct_num'] += (pred_opered == ped_labels).sum()
                 opered_dict['nonPed_acc_num'] += ((ped_labels[nonPed_idx] == pred_opered[nonPed_idx]) * 1).sum()

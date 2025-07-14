@@ -400,6 +400,7 @@ class Ped_Classifier():
 
             # 只用fade images训练的情况 / 用org+fade 图片训练的情况
             if self.opts.fade_images_only or (not self.opts.fade_images_only and self.opts.beta > 0.0):
+                print(f'data:{data.keys()}')
                 operated_images = data['ope_image'].to(DEVICE)
                 logits_opered = self.ped_model(operated_images)
                 pred_opered = torch.argmax(logits_opered, 1)

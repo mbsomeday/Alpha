@@ -209,7 +209,6 @@ class operated_dsimages(Dataset):
         ope_image_path = self.operated_images[idx]
         ped_label = self.ped_labels[idx]
 
-
         # 读取 org_image 和 operated image
         org_image = Image.open(org_image_path).convert('RGB')
         org_image = self.img_transforms(org_image)

@@ -115,7 +115,7 @@ class gen_fade_images():
             (cam_min, cam_max) = (added_cam.min(), added_cam.max())
             added_cam = (added_cam - cam_min) / (((cam_max - cam_min) + 1e-08))
 
-            print(f'added_cam:{added_cam.shape}， {added_cam.max()}')
+            # print(f'added_cam:{added_cam.shape}， {added_cam.max()}')
 
             fade_image = image - added_cam * image
 
@@ -147,7 +147,7 @@ class gen_fade_images():
             # 对原始图片减去 mask
 
 
-            break
+            # break
 
 
             '''

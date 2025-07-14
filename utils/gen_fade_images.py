@@ -12,7 +12,7 @@ from torchcam.methods.gradient import GradCAM, LayerCAM
 from torchvision import transforms
 from PIL import Image
 
-from utils import load_model, TemporaryGrad, save_image_tensor
+from utils.utils import load_model, TemporaryGrad, save_image_tensor
 
 from data.dataset import my_dataset
 

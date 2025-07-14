@@ -238,12 +238,11 @@ class Ped_Classifier():
             os.mkdir(self.callback_save_path)
 
         # ********** 分情况的数据准备 **********    augmentation_train
-        if self.opts.beta > 0.0:
+        if self.opts.beta > 0.0 or self.opts.fade_images_only:
             # 这里直接加载处理好的 org images 和 fade images
             self.train_dataset = operated_dsimages(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, operated_dir_name=self.opts.operated_dir_name)
             self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.batch_size, shuffle=True)
         else:
-
             self.train_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='augmentation_train.txt')
             self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.batch_size, shuffle=True)
 
@@ -400,7 +399,6 @@ class Ped_Classifier():
 
             # 只用fade images训练的情况 / 用org+fade 图片训练的情况
             if self.opts.fade_images_only or (not self.opts.fade_images_only and self.opts.beta > 0.0):
-                print(f'data:{data.keys()}')
                 operated_images = data['ope_image'].to(DEVICE)
                 logits_opered = self.ped_model(operated_images)
                 pred_opered = torch.argmax(logits_opered, 1)

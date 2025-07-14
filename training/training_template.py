@@ -240,7 +240,7 @@ class Ped_Classifier():
         # ********** 分情况的数据准备 **********    augmentation_train
         if self.opts.beta > 0.0:
             # 这里直接加载处理好的 org images 和 fade images
-            self.train_dataset = operated_dsimages(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key)
+            self.train_dataset = operated_dsimages(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, operated_dir_name=self.opts.operated_dir_name)
             self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.batch_size, shuffle=True)
         else:
 

@@ -120,7 +120,7 @@ class gen_fade_images():
             fade_image = image - added_cam * image
 
             fade_img_save_path = os.path.join(self.img_save_dir, cls_name, img_name)
-            # save_image_tensor(fade_image, fade_img_save_path)
+            save_image_tensor(fade_image, fade_img_save_path)
 
             # m, n = 3, 4
             # plt.figure(figsize=(16, 12))

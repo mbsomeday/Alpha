@@ -12,7 +12,7 @@ from torchcam.methods.gradient import GradCAM, LayerCAM
 from torchvision import transforms
 from PIL import Image
 
-from utils.utils import load_model, TemporaryGrad, save_image_tensor
+from utils import load_model, TemporaryGrad, save_image_tensor
 
 from data.dataset import my_dataset
 
@@ -29,18 +29,18 @@ class gen_fade_images():
         self.backward_features = None
         self.grad_layer = []
 
-        # for i in range(9):
-        #     cur_layer = f'features.{i}'
-        #     self.grad_layer.append(cur_layer)
+        for i in range(9):
+            cur_layer = f'features.{i}'
+            self.grad_layer.append(cur_layer)
 
-        self.grad_layer = ['features.7', 'features.8']
+        # self.grad_layer = ['features.7', 'features.8']
         # self.sigma = 0.25
         # self.omega = 100
 
         # 用torchcam
         self.cam_operator = LayerCAM(self.ds_model, target_layer=self.grad_layer)
-        # for name, m in self.ds_model.named_modules():
-        #     print(f'---{name}---')
+        for name, m in self.ds_model.named_modules():
+            print(f'---{name}---')
 
         # 数据
         self.get_dataset = my_dataset(ds_name_list=args.ds_name_list, path_key='Stage6_org', txt_name=args.txt_name)
@@ -122,6 +122,7 @@ class gen_fade_images():
             fade_img_save_path = os.path.join(self.img_save_dir, cls_name, img_name)
             save_image_tensor(fade_image, fade_img_save_path)
 
+
             # m, n = 3, 4
             # plt.figure(figsize=(16, 12))
             # cam_num = len(cams)
@@ -143,6 +144,8 @@ class gen_fade_images():
             # plt.title('fade')
             #
             # plt.show()
+            # break
+
 
             # 对原始图片减去 mask
 

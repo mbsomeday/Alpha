@@ -398,16 +398,20 @@ class Ped_Classifier():
             pred_org = torch.argmax(logits_org, 1)
             loss_org = self.loss_fn(logits_org, ped_labels)
 
-            if self.opts.beta > 0.0:
+            # 只用fade images训练的情况 / 用org+fade 图片训练的情况
+            if self.opts.fade_images_only or (not self.opts.fade_images_only and self.opts.beta > 0.0):
                 operated_images = data['ope_image'].to(DEVICE)
                 logits_opered = self.ped_model(operated_images)
                 pred_opered = torch.argmax(logits_opered, 1)
                 loss_opered = self.loss_fn(logits_opered, ped_labels)
-
                 opered_dict['loss'] += loss_opered.item()
-                loss_value = (1 - self.opts.beta) * loss_org + self.opts.beta * loss_opered
+
+                if self.opts.fade_images_only:
+                    loss_value = loss_opered
+                else:
+                    loss_value = (1 - self.opts.beta) * loss_org + self.opts.beta * loss_opered
             else:
-                loss_value = loss_org
+                loss_value = loss_org       # baseline只用org图片训练的情况
 
             # 反向传播
             self.optimizer.zero_grad()

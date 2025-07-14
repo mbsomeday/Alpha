@@ -50,6 +50,7 @@ class TrainArgs(BaseArgs):
         parser.add_argument('--operator', type=str, default=None, help='types of operator that handle the image')
         parser.add_argument('--opt_key_path', type=str, default=None, help='operated image key path')
         parser.add_argument('--beta', type=float, default=0.0)
+        parser.add_argument('--fade_images_only', action='store_true', help='if only train with fade images')
 
         # model
         parser.add_argument('--init_method', type=str, default='orthogonal', help='the way to initialize model weights, e.g., kaiming, orthogonal')

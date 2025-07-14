@@ -150,10 +150,11 @@ class operated_dsimages(Dataset):
     '''
         读取org image和fade images，仅限augmentation_train
     '''
-    def __init__(self, ds_name_list, path_key):
+    def __init__(self, ds_name_list, path_key, operated_dir_name):
         self.ds_name_list = ds_name_list
         self.ds_label_list = []
         self.path_key = path_key
+        self.operated_dir_name = operated_dir_name
         for ds_name in ds_name_list:
             self.ds_label_list.append(int(ds_name[1]) - 1)
         self.txt_name = 'augmentation_train.txt'
@@ -183,7 +184,7 @@ class operated_dsimages(Dataset):
                 contents = line.split()
 
                 org_image_path = os.path.join(ds_dir, contents[0])
-                operated_img_path = org_image_path.replace('augmentation_train', 'fade_aug_train')
+                operated_img_path = org_image_path.replace('augmentation_train', self.operated_dir_name)
 
                 org_images.append(org_image_path)
                 operated_image.append(operated_img_path)
@@ -227,6 +228,8 @@ class operated_dsimages(Dataset):
         }
 
         return image_dict
+
+
 
 
 

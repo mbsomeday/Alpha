@@ -230,6 +230,8 @@ class Ped_Classifier():
             self.callback_save_dir += info
         if self.opts.beta > 0.0:
             self.callback_save_dir += '_' + str(self.opts.rand_seed) + '_' + str(self.opts.beta) + self.opts.operator.lower() + 'Loss'
+        elif self.opts.fade_images_only:
+            self.callback_save_dir += '_' + str(self.opts.rand_seed) + '_' + '08CAM'
         else:
             self.callback_save_dir += '_' + str(self.opts.rand_seed) + '_Baseline'
         self.callback_save_path = os.path.join(os.getcwd(), self.callback_save_dir)

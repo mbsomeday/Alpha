@@ -387,7 +387,7 @@ class Ped_Classifier():
 
         y_true = []
         org_dict = self.inif_pred_info()
-        opered_dict = self.inif_pred_info() if self.opts.beta > 0.0 else None
+        opered_dict = self.inif_pred_info() if self.opts.beta > 0.0 or self.opts.fade_images_only else None
 
         for batch_idx, data in enumerate(tqdm(self.train_loader)):
             org_images = data['image'].to(DEVICE)

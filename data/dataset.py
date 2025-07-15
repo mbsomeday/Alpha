@@ -162,7 +162,7 @@ class operated_dsimages(Dataset):
             transforms.ToTensor(),
         ])
         self.org_images, self.operated_images, self.ped_labels = self.init_ImagesLabels()
-        print(f'Get dataset: {ds_name_list}, txt_name: {self.txt_name}, total {len(self.org_images)} images')
+        print(f'Get dataset: {ds_name_list}, txt_name: {self.txt_name}, total {len(self.org_images)} images, fade image dir:{operated_dir_name}')
 
     def __len__(self):
         return len(self.org_images)

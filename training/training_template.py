@@ -244,12 +244,14 @@ class Ped_Classifier():
             # 这里直接加载处理好的 org images 和 fade images
             self.train_dataset = operated_dsimages(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, operated_dir_name=self.opts.operated_dir_name)
             self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.batch_size, shuffle=True)
+            self.val_dataset = operated_dsimages(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, operated_dir_name='layerCAM78_val')
+            self.val_loader = DataLoader(self.val_dataset, batch_size=self.opts.batch_size, shuffle=False)
         else:
             self.train_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='augmentation_train.txt')
             self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.batch_size, shuffle=True)
 
-        self.val_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='val.txt')
-        self.val_loader = DataLoader(self.val_dataset, batch_size=self.opts.batch_size, shuffle=False)
+        # self.val_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name='val.txt')
+        # self.val_loader = DataLoader(self.val_dataset, batch_size=self.opts.batch_size, shuffle=False)
 
         self.train_nonPed_num, self.train_ped_num = self.train_dataset.get_ped_cls_num()
         self.val_nonPed_num, self.val_ped_num = self.val_dataset.get_ped_cls_num()

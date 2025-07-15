@@ -39,8 +39,8 @@ class gen_fade_images():
 
         # 用torchcam
         self.cam_operator = LayerCAM(self.ds_model, target_layer=self.grad_layer)
-        for name, m in self.ds_model.named_modules():
-            print(f'---{name}---')
+        # for name, m in self.ds_model.named_modules():
+        #     print(f'---{name}---')
 
         # 数据
         self.get_dataset = my_dataset(ds_name_list=args.ds_name_list, path_key='Stage6_org', txt_name=args.txt_name)

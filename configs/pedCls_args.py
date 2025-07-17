@@ -16,7 +16,6 @@ class BaseArgs():
         parser.add_argument('--data_key', type=str, default='tiny_dataset')
         parser.add_argument('--isTrain', action='store_true')
         parser.add_argument('--rand_seed', type=int, default=3)
-        parser.add_argument('--txt_name_list', nargs='+', default=['test.txt'], help='need to match the num of ds_names')
 
         self.initialized = True
         return parser
@@ -57,6 +56,10 @@ class TrainArgs(BaseArgs):
         # model
         parser.add_argument('--init_method', type=str, default='orthogonal', help='the way to initialize model weights, e.g., kaiming, orthogonal')
         parser.add_argument('--base_lr', type=float, default=0.01)
+
+        # dataset
+        parser.add_argument('--train_txt_name_list', nargs='+', default=['train.txt'], help='need to match the num of ds_names')
+        parser.add_argument('--val_txt_name_list', nargs='+', default=['test.txt'], help='need to match the num of ds_names')
 
         # callbacks
         parser.add_argument('--top_k', type=int, default=3)

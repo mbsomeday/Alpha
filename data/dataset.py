@@ -63,7 +63,7 @@ class RandomAug():
 
 
 class my_dataset(Dataset):
-    def __init__(self, ds_name_list, path_key, txt_name):
+    def __init__(self, ds_name_list, path_key, txt_name_list):
         '''
         :param ds_name_list:
         :param path_key: org_dataset
@@ -75,13 +75,13 @@ class my_dataset(Dataset):
         for ds_name in ds_name_list:
             self.ds_label_list.append(int(ds_name[1]) - 1)
 
-        self.txt_name = txt_name
+        self.txt_name_list = txt_name_list
         self.img_transforms = transforms.Compose([
             transforms.ToTensor(),
         ])
 
         self.images, self.ped_labels, self.ds_labels = self.init_ImagesLabels()
-        print(f'Get dataset: {ds_name_list}, txt_name: {txt_name}, total {len(self.images)} images')
+        print(f'Get dataset: {ds_name_list}, txt_name: {txt_name_list}, total {len(self.images)} images')
 
     def init_ImagesLabels(self):
         images, ped_labels, ds_labels = [], [], []
@@ -89,7 +89,8 @@ class my_dataset(Dataset):
         for ds_idx, ds_name in enumerate(self.ds_name_list):
             ds_label = self.ds_label_list[ds_idx]
             ds_dir = PATHS[self.path_key][ds_name]
-            txt_path = os.path.join(ds_dir, 'dataset_txt', self.txt_name)
+            txt_path = os.path.join(ds_dir, 'dataset_txt', self.txt_name_list[ds_idx])
+
             print(f'Lodaing {txt_path}')
 
             with open(txt_path, 'r') as f:
@@ -150,19 +151,19 @@ class operated_dsimages(Dataset):
     '''
         读取org image和fade images，仅限augmentation_train
     '''
-    def __init__(self, ds_name_list, path_key, txt_name, operated_dir_name):
+    def __init__(self, ds_name_list, path_key, txt_name_list, operated_dir_name):
         self.ds_name_list = ds_name_list
         self.ds_label_list = []
         self.path_key = path_key
         self.operated_dir_name = operated_dir_name
         for ds_name in ds_name_list:
             self.ds_label_list.append(int(ds_name[1]) - 1)
-        self.txt_name = txt_name
+        self.txt_name_list = txt_name_list
         self.img_transforms = transforms.Compose([
             transforms.ToTensor(),
         ])
         self.org_images, self.operated_images, self.ped_labels = self.init_ImagesLabels()
-        print(f'Get dataset: {ds_name_list}, txt_name: {self.txt_name}, total {len(self.org_images)} images, fade image dir:{operated_dir_name}')
+        print(f'Get dataset: {ds_name_list}, txt_name: {self.txt_name_list}, total {len(self.org_images)} images, fade image dir:{operated_dir_name}')
 
     def __len__(self):
         return len(self.org_images)
@@ -172,7 +173,7 @@ class operated_dsimages(Dataset):
         for ds_idx, ds_name in enumerate(self.ds_name_list):
 
             ds_dir = PATHS[self.path_key][ds_name]
-            txt_path = os.path.join(ds_dir, 'dataset_txt', self.txt_name)
+            txt_path = os.path.join(ds_dir, 'dataset_txt', self.txt_name_list[ds_idx])
             print(f'Lodaing {txt_path}')
 
             with open(txt_path, 'r') as f:

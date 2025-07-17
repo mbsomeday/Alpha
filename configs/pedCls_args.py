@@ -16,6 +16,7 @@ class BaseArgs():
         parser.add_argument('--data_key', type=str, default='tiny_dataset')
         parser.add_argument('--isTrain', action='store_true')
         parser.add_argument('--rand_seed', type=int, default=3)
+        parser.add_argument('--txt_name_list', nargs='+', default=['test.txt'], help='need to match the num of ds_names')
 
         self.initialized = True
         return parser

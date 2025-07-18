@@ -242,7 +242,7 @@ class Ped_Classifier():
         # ********** 分情况的数据准备 **********    augmentation_train
         if self.opts.beta > 0.0 or self.opts.fade_images_only:
             # 这里直接加载处理好的 org images 和 fade images
-            self.train_dataset = operated_dsimages(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name_list=self.opts.txt_name_list, operated_dir_name=self.opts.operated_dir_name)
+            self.train_dataset = operated_dsimages(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name_list=self.opts.train_txt_name_list, operated_dir_name=self.opts.operated_dir_name)
             self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.batch_size, shuffle=True)
             # val的时候用fade images
             self.val_dataset = operated_dsimages(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name_list=['val.txt'], operated_dir_name='layerCAM78_val')

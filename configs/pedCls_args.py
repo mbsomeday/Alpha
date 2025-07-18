@@ -59,7 +59,7 @@ class TrainArgs(BaseArgs):
 
         # dataset
         parser.add_argument('--train_txt_name_list', nargs='+', default=['train.txt'], help='need to match the num of ds_names')
-        parser.add_argument('--val_txt_name_list', nargs='+', default=['test.txt'], help='need to match the num of ds_names')
+        parser.add_argument('--val_txt_name_list', nargs='+', default=['val.txt'], help='need to match the num of ds_names')
 
         # callbacks
         parser.add_argument('--top_k', type=int, default=3)

@@ -11,7 +11,7 @@ class BaseArgs():
     def initialize(self, parser):
         """Define the common options that are used in both training and test."""
         parser.add_argument('--ped_model_obj', type=str, default='models.EfficientNet.efficientNetB0')
-        parser.add_argument('--ds_name_list', nargs='+', default=['D1'], help='dataset list')
+        parser.add_argument('--ds_name_list', nargs='+', default=['D3'], help='dataset list')
         parser.add_argument('--batch_size', type=int, default=32)
         parser.add_argument('--data_key', type=str, default='tiny_dataset')
         parser.add_argument('--isTrain', action='store_true')

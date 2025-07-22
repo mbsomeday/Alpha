@@ -12,7 +12,8 @@ from torchcam.methods.gradient import GradCAM, LayerCAM
 from torchvision import transforms
 from PIL import Image
 
-from utils.utils import load_model, TemporaryGrad, save_image_tensor
+# from utils.utils import load_model, TemporaryGrad, save_image_tensor
+from utils import load_model, TemporaryGrad, save_image_tensor
 
 from data.dataset import my_dataset
 
@@ -20,7 +21,6 @@ from data.dataset import my_dataset
 class gen_fade_images():
     def __init__(self, args):
         # 模型
-        # ds_weights_path = R'D:\my_phd\Model_Weights\Stage5\EfficientNetB0_Scratch\efficientNetB0_dsCls-10-0.97636.pth'
         ds_model = efficientNetB0(num_class=3)
         self.ds_model = load_model(ds_model, args.ds_weights_path)
         self.ds_model.eval()
@@ -29,7 +29,7 @@ class gen_fade_images():
         self.backward_features = None
         self.grad_layer = []
 
-        for i in range(9):
+        for i in range(0, 9):
             cur_layer = f'features.{i}'
             self.grad_layer.append(cur_layer)
 
@@ -43,7 +43,7 @@ class gen_fade_images():
         #     print(f'---{name}---')
 
         # 数据
-        self.get_dataset = my_dataset(ds_name_list=args.ds_name_list, path_key='Stage6_org', txt_name=args.txt_name)
+        self.get_dataset = my_dataset(ds_name_list=args.ds_name_list, path_key='Stage6_org', txt_name_list=args.txt_name_list)
         self.get_loader = DataLoader(self.get_dataset, batch_size=1, shuffle=True)
 
         # self._register_hooks(self.ds_model, self.grad_layer)
@@ -75,6 +75,11 @@ class gen_fade_images():
         if not gradient_layer_found:
             raise AttributeError('Gradient layer %s not found in the internal model' % grad_layer)
 
+    @staticmethod
+    def _normalize_cam(cam_tensor):
+        (cam_min, cam_max) = (cam_tensor.min(), cam_tensor.max())
+        cam_tensor = (cam_tensor - cam_min) / (((cam_max - cam_min) + 1e-08))
+        return cam_tensor
 
     def calc_cam(self):
         for idx, data_dict in enumerate(tqdm(self.get_loader)):
@@ -102,37 +107,38 @@ class gen_fade_images():
                 cam = tensor_transform(cam)
                 resized_cam.append(cam)
 
-            # vis_cam = torch.cat(resized_cam, dim=0)
-            # vis_cam = torch.sum(vis_cam, 0).unsqueeze(0)
-            # (cam_min, cam_max) = (vis_cam.min(), vis_cam.max())
-            # norm_cam = (vis_cam - cam_min) / (((cam_max - cam_min) + 1e-08)).data
-
-            added_cam = torch.zeros([1, 224, 224])  # 初始化一个全0的tensor
-            for cam in resized_cam:
-                added_cam = torch.add(added_cam, cam)  # 逐个累加
+            stacked_cam = torch.stack(resized_cam, dim=0)
+            fused_cam = torch.max(stacked_cam, dim=0)[0]
 
             # 正则化
-            (cam_min, cam_max) = (added_cam.min(), added_cam.max())
-            added_cam = (added_cam - cam_min) / (((cam_max - cam_min) + 1e-08))
+            fused_cam = self._normalize_cam(fused_cam)
+            t = fused_cam.max() * 0.6
+            fused_cam[fused_cam < t] = 0
+            fused_cam[fused_cam >= t] = 1.0
 
             # print(f'added_cam:{added_cam.shape}， {added_cam.max()}')
+            # torch.set_printoptions(profile="full")
+            # print(added_cam)
 
-            fade_image = image - added_cam * image
+            fade_image = image - fused_cam * image
 
             fade_img_save_path = os.path.join(self.img_save_dir, cls_name, img_name)
             save_image_tensor(fade_image, fade_img_save_path)
 
+            '''
+                plt显示图片
+            '''
 
             # m, n = 3, 4
             # plt.figure(figsize=(16, 12))
             # cam_num = len(cams)
-            # for i in range(1, cam_num+1):
-            #     plt.subplot(m, n, i)
-            #     plt.imshow(trans_plt(cams[i-1]))
-            #     plt.title(f'feature.{i}')
+            # # for i in range(1, cam_num+1):
+            # #     plt.subplot(m, n, i)
+            # #     plt.imshow(trans_plt(fused_cam[i-1]))
+            # #     plt.title(f'feature.{i}')
             #
             # plt.subplot(m, n, cam_num+1)
-            # plt.imshow(trans_plt(added_cam))
+            # plt.imshow(trans_plt(fused_cam))
             # plt.title('added')
             #
             # plt.subplot(m, n, cam_num+2)
@@ -144,7 +150,6 @@ class gen_fade_images():
             # plt.title('fade')
             #
             # plt.show()
-            # break
 
 
             # 对原始图片减去 mask
@@ -152,6 +157,7 @@ class gen_fade_images():
 
             # break
 
+            # break
 
             '''
                 代码生成 fade image
@@ -208,8 +214,8 @@ if __name__ == '__main__':
         parser = argparse.ArgumentParser()
         parser.add_argument('--ds_weights_path', type=str, default=r'D:\my_phd\Model_Weights\Stage6\new_dataset\dsClsD1D2D3-08-1.09839.pth')
         parser.add_argument('--ds_name_list', nargs='+', default=['D3'])
-        parser.add_argument('--txt_name', type=str, default='augmentation_train.txt')
-        parser.add_argument('--img_save_dir', type=str, default=r'D:\my_phd\dataset\Stage6\stage6_bdd100k\layerCAM_aug_train')
+        parser.add_argument('--txt_name_list', nargs='+', default=['augmentation_train.txt'])
+        parser.add_argument('--img_save_dir', type=str, default=r'D:\my_phd\dataset\Stage6\stage6_bdd100k\layerCAM_hardMask')
 
         args = parser.parse_args()
         return args

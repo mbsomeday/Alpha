@@ -12,8 +12,10 @@ from torchcam.methods.gradient import GradCAM, LayerCAM
 from torchvision import transforms
 from PIL import Image
 
-# from utils.utils import load_model, TemporaryGrad, save_image_tensor
-from utils import load_model, TemporaryGrad, save_image_tensor
+if torch.cuda.is_available():
+    from utils.utils import load_model, TemporaryGrad, save_image_tensor
+else:
+    from utils import load_model, TemporaryGrad, save_image_tensor
 
 from data.dataset import my_dataset
 

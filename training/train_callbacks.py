@@ -91,14 +91,18 @@ class EarlyStopping():
             if weights.endswith('.pth'):
                 all_weights.append(weights)
 
-        # 按存储格式来： save_name = prefix_{epoch}_{balanced_acc}.pth
+        # 按存储格式来： save_name = prefix_{epoch}_{balanced_acc/loss}.pth
         if len(all_weights) > self.top_k - 1:
             sorted = []
             for weight in all_weights:
                 val_acc = weight.split('-')[-1]
                 sorted.append((weight, val_acc))
 
-            sorted.sort(key=lambda w: w[1], reverse=False)
+            if self.monitored_metric == 'balanced_accuracy':
+                sorted.sort(key=lambda w: w[1], reverse=False)
+            else:
+                sorted.sort(key=lambda w: w[1], reverse=True)
+
             print('After sorting:', sorted)
 
             del_path = os.path.join(self.model_save_dir, sorted[0][0])

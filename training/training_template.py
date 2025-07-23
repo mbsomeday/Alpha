@@ -229,9 +229,9 @@ class Ped_Classifier():
             info = '_' + ds_name
             self.callback_save_dir += info
         if self.opts.beta > 0.0:
-            self.callback_save_dir += '_' + str(self.opts.rand_seed) + '_' + str(self.opts.beta) + self.opts.operator.lower() + 'Loss'
+            self.callback_save_dir += '_' + str(self.opts.rand_seed) + '_' + str(self.opts.beta) + self.opts.operator.lower() + 'Loss' + '_08CAMHardMask'
         elif self.opts.fade_images_only:
-            self.callback_save_dir += '_' + str(self.opts.rand_seed) + '_' + '08CAM'
+            self.callback_save_dir += '_' + str(self.opts.rand_seed) + '_' + '08CAMHardMask'
         else:
             self.callback_save_dir += '_' + str(self.opts.rand_seed) + '_Baseline'
         self.callback_save_path = os.path.join(os.getcwd(), self.callback_save_dir)
@@ -245,14 +245,14 @@ class Ped_Classifier():
             self.train_dataset = operated_dsimages(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name_list=self.opts.train_txt_name_list, operated_dir_name=self.opts.operated_dir_name)
             self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.batch_size, shuffle=True)
             # val的时候用fade images
-            self.val_dataset = operated_dsimages(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name_list=['val.txt'], operated_dir_name='layerCAM_hardMask/layerCAM08_val_hardMask')
-            self.val_loader = DataLoader(self.val_dataset, batch_size=self.opts.batch_size, shuffle=False)
+            # self.val_dataset = operated_dsimages(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name_list=['val.txt'], operated_dir_name='layerCAM_hardMask/layerCAM08_val_hardMask')
+            # self.val_loader = DataLoader(self.val_dataset, batch_size=self.opts.batch_size, shuffle=False)
         else:
             self.train_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name_list=self.opts.train_txt_name_list)
             self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.batch_size, shuffle=True)
 
-        # self.val_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name_list=self.opts.val_txt_name_list)
-        # self.val_loader = DataLoader(self.val_dataset, batch_size=self.opts.batch_size, shuffle=False)
+        self.val_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name_list=self.opts.val_txt_name_list)
+        self.val_loader = DataLoader(self.val_dataset, batch_size=self.opts.batch_size, shuffle=False)
 
         self.train_nonPed_num, self.train_ped_num = self.train_dataset.get_ped_cls_num()
         self.val_nonPed_num, self.val_ped_num = self.val_dataset.get_ped_cls_num()

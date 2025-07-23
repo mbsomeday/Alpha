@@ -5,7 +5,7 @@ import argparse
 from models.EfficientNet import efficientNetB0
 from torch.utils.data import DataLoader
 import torch, os
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import torch.nn.functional as F
 from tqdm import tqdm
 from torchcam.methods.gradient import GradCAM, LayerCAM
@@ -160,7 +160,7 @@ class gen_fade_images():
             # 对原始图片减去 mask
 
 
-            break
+            # break
 
             # break
 

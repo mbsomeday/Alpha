@@ -118,11 +118,14 @@ class gen_fade_images():
             fused_cam[fused_cam < t] = 0
             fused_cam[fused_cam >= t] = 1.0
 
+            pepper_mask = torch.randint(0, 2, (1, 224, 224)).float()  # 生成 0 和 1 的整数，然后转为浮点数
+            pepper_mask = pepper_mask * fused_cam
+
             # print(f'added_cam:{added_cam.shape}， {added_cam.max()}')
             # torch.set_printoptions(profile="full")
             # print(added_cam)
 
-            fade_image = image - fused_cam * image
+            fade_image = image - pepper_mask * image
 
             fade_img_save_path = os.path.join(self.img_save_dir, cls_name, img_name)
             save_image_tensor(fade_image, fade_img_save_path)
@@ -140,7 +143,7 @@ class gen_fade_images():
             # #     plt.title(f'feature.{i}')
             #
             # plt.subplot(m, n, cam_num+1)
-            # plt.imshow(trans_plt(fused_cam))
+            # plt.imshow(trans_plt(pepper_mask))
             # plt.title('added')
             #
             # plt.subplot(m, n, cam_num+2)
@@ -157,7 +160,7 @@ class gen_fade_images():
             # 对原始图片减去 mask
 
 
-            # break
+            break
 
             # break
 

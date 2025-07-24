@@ -244,9 +244,9 @@ class Ped_Classifier():
             # 这里直接加载处理好的 org images 和 fade images
             self.train_dataset = operated_dsimages(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name_list=self.opts.train_txt_name_list, operated_dir_name=self.opts.operated_dir_name)
             self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.batch_size, shuffle=True)
-            # val的时候用fade images
-            self.val_dataset = operated_dsimages(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name_list=['val.txt'], operated_dir_name='layerCAM08Pepper_val')
-            self.val_loader = DataLoader(self.val_dataset, batch_size=self.opts.batch_size, shuffle=False)
+            # # val的时候用fade images
+            # self.val_dataset = operated_dsimages(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name_list=['val.txt'], operated_dir_name='layerCAM08Pepper_val')
+            # self.val_loader = DataLoader(self.val_dataset, batch_size=self.opts.batch_size, shuffle=False)
         else:
             self.train_dataset = my_dataset(ds_name_list=self.opts.ds_name_list, path_key=self.opts.data_key, txt_name_list=self.opts.train_txt_name_list)
             self.train_loader = DataLoader(self.train_dataset, batch_size=self.opts.batch_size, shuffle=True)

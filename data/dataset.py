@@ -150,20 +150,22 @@ class my_dataset(Dataset):
 class operated_dsimages(Dataset):
     '''
         读取org image和fade images，仅限augmentation_train
+        读取augmentation train和对应的operated image
     '''
-    def __init__(self, ds_name_list, path_key, txt_name_list, operated_dir_name):
+    def __init__(self, ds_name_list, path_key, operated_dir_name):
         self.ds_name_list = ds_name_list
         self.ds_label_list = []
         self.path_key = path_key
         self.operated_dir_name = operated_dir_name
         for ds_name in ds_name_list:
             self.ds_label_list.append(int(ds_name[1]) - 1)
-        self.txt_name_list = txt_name_list
+        self.txt_name_list = ['augmentation_train.txt']
         self.img_transforms = transforms.Compose([
             transforms.ToTensor(),
         ])
         self.org_images, self.operated_images, self.ped_labels = self.init_ImagesLabels()
-        print(f'Get dataset: {ds_name_list}, txt_name: {self.txt_name_list}, total {len(self.org_images)} images, fade image dir:{operated_dir_name}')
+
+        print(f'Get images from {ds_name_list}, org images from: augmentation_train, fade images from: {operated_dir_name}')
 
     def __len__(self):
         return len(self.org_images)
@@ -339,7 +341,7 @@ class dataset_clip(Dataset):
 
 
 if __name__ == '__main__':
-    get_dataset = operated_dsimages(ds_name_list=['D3'], path_key='Stage6_org')
+    get_dataset = operated_dsimages(ds_name_list=['D3'], txt_name_list=['augmentation_train.txt'], path_key='Stage6_org', operated_dir_name='layerCAM08_aug_train')
     get_loader = DataLoader(get_dataset, batch_size=4, shuffle=False)
 
     for idx, data in enumerate(get_loader):

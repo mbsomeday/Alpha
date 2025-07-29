@@ -59,7 +59,7 @@ ds_dataset = temp_dataset(base_dir, label=2)
 ds_loader = DataLoader(ds_dataset, batch_size=2)
 
 ds_model = efficientNetB0(num_class=3)
-ds_model = load_model(ds_model, ds_weights)
+ds_model = load_model(ds_model, ds_weights).to(DEVICE)
 ds_model.eval()
 
 y_label = []

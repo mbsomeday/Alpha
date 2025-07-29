@@ -40,6 +40,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--base_dir', type=str, default=r'D:\my_phd\dataset\Stage6\stage6_bdd100k\fade_aug_train')
     parser.add_argument('--label', type=int, default=2)
+    parser.add_argument('--batch_size', type=int, default=2)
 
     parser.add_argument('--ds_weights', type=str, default=r'D:\my_phd\Model_Weights\Stage6\new_dataset\dsClsD1D2D3-08-1.09839.pth')
 
@@ -53,10 +54,11 @@ args = get_args()
 base_dir = args.base_dir
 label = args.label
 ds_weights = args.ds_weights
+batch_size = args.batch_size
 
 
 ds_dataset = temp_dataset(base_dir, label=2)
-ds_loader = DataLoader(ds_dataset, batch_size=2)
+ds_loader = DataLoader(ds_dataset, batch_size=batch_size)
 
 ds_model = efficientNetB0(num_class=3)
 ds_model = load_model(ds_model, ds_weights).to(DEVICE)

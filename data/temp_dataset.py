@@ -59,7 +59,8 @@ if __name__ == '__main__':
     get_dataset = temp_dataset(base_dir, label=2)
     get_loader = DataLoader(get_dataset, batch_size=2)
 
-    for image, label in get_loader:
+    for idx, data in enumerate(get_loader):
+        image, label = data[0], data[1]
         print(label)
         print(image.shape)
 

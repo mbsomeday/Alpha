@@ -66,7 +66,8 @@ y_label = []
 y_pred = []
 correct_num = 0
 with torch.no_grad():
-    for idx, image, label in enumerate(tqdm(ds_loader)):
+    for idx, data in enumerate(tqdm(ds_loader)):
+        image, label = data[0], data[1]
         images = image.to(DEVICE)
         ds_label = label.to(DEVICE)
 

@@ -63,7 +63,7 @@ class RandomAug():
 
 
 class my_dataset(Dataset):
-    def __init__(self, ds_name_list, path_key, txt_name_list):
+    def __init__(self, ds_name_list, path_key, txt_name):
         '''
         :param ds_name_list:
         :param path_key: org_dataset
@@ -75,13 +75,13 @@ class my_dataset(Dataset):
         for ds_name in ds_name_list:
             self.ds_label_list.append(int(ds_name[1]) - 1)
 
-        self.txt_name_list = txt_name_list
+        self.txt_name = txt_name
         self.img_transforms = transforms.Compose([
             transforms.ToTensor(),
         ])
 
         self.images, self.ped_labels, self.ds_labels = self.init_ImagesLabels()
-        print(f'Get dataset: {ds_name_list}, txt_name: {txt_name_list}, total {len(self.images)} images')
+        print(f'Get dataset: {ds_name_list}, txt_name: {txt_name}, total {len(self.images)} images')
 
     def init_ImagesLabels(self):
         images, ped_labels, ds_labels = [], [], []
@@ -89,7 +89,7 @@ class my_dataset(Dataset):
         for ds_idx, ds_name in enumerate(self.ds_name_list):
             ds_label = self.ds_label_list[ds_idx]
             ds_dir = PATHS[self.path_key][ds_name]
-            txt_path = os.path.join(ds_dir, 'dataset_txt', self.txt_name_list[ds_idx])
+            txt_path = os.path.join(ds_dir, 'dataset_txt', self.txt_name)
 
             print(f'Lodaing {txt_path}')
 

@@ -17,11 +17,11 @@ from tqdm import tqdm
 from utils.utils import DEVICE, get_obj_from_str, load_model, DotDict, TemporaryGrad
 from data.dataset import my_dataset, operated_dsimages
 
-# if torch.cuda.is_available():
-#     from training.train_callbacks import EarlyStopping, Model_Logger      # remote
-# else:
-#     from train_callbacks import EarlyStopping, Model_Logger     # local
-from training.train_callbacks import EarlyStopping, Model_Logger
+if torch.cuda.is_available():
+    from training.train_callbacks import EarlyStopping, Model_Logger      # remote
+else:
+    from train_callbacks import EarlyStopping, Model_Logger     # local
+# from training.train_callbacks import EarlyStopping, Model_Logger
 
 
 '''
@@ -597,7 +597,7 @@ class Ped_Classifier():
 
 
 
-class ds_classifier():
+class DS_Classifier():
     '''
         用new D1/D2/D3 训练ds model
     '''
@@ -776,7 +776,7 @@ class ds_classifier():
         self.ds_model = load_model(self.ds_model, self.opts.ds_weights_path)
         self.ds_model.eval()
 
-        test_dataset = my_dataset(self.opts.ds_name_list, path_key=self.opts.data_key, txt_name=self.opts.test_txt_name)
+        test_dataset = my_dataset(self.opts.ds_name_list, path_key=self.opts.path_key, txt_name=self.opts.test_txt_name)
         test_loader = DataLoader(test_dataset, batch_size=self.opts.test_batch_size, shuffle=False)
 
         test_correct_num = 0
@@ -811,37 +811,34 @@ if __name__ == '__main__':
     ped_weights_path = r'D:\my_phd\Model_Weights\Stage5\EfficientNetB0_Scratch\efficientNetB0_D2-21-0.94403.pth'
     # ds_weights_path = r'D:\my_phd\Model_Weights\Stage5\EfficientNetB0_Scratch\efficientNetB0_D2-21-0.94403.pth'
 
-    # tt = Ped_Classifier(model_obj,
-    #                     ds_name_list=['D2'],
-    #                     batch_size=4, epochs=100,
-    #                     ds_weights_path=ds_weights_path,
-    #                     ped_weights_path=ped_weights_path,
-    #                     isTrain=False,
-    #                     beta=0.0,
-    #                     resume=False,
-    #                     **testarg_dict
-    #                     )
+    from configs.pedCls_args import TrainArgs
+
+    # opts = TrainArgs().parse()
+    # ped_cls = Ped_Classifier(opts=opts)
+
+
+
+
     # tt.train()
     # tt.test()
 
-    test_obj = Blur_Image_Patch(model_obj=model_obj, ds_weights_path=ds_weights_path)
-
-    torch.manual_seed(20)
-    ds_name_list = ['D2']
-    batch_size = 4
-    val_dataset = my_dataset(ds_name_list=ds_name_list, path_key='tiny_dataset', txt_name='val.txt')
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
-
-    for batch_idx, data_dict in enumerate(val_loader):
-        images = data_dict['image']
-        ped_labels = data_dict['ped_label']
-
-        print(f'ped_labels: {ped_labels}')
-
-        test_obj.calc_cam(images)
-
-
-        break
+    # test_obj = Blur_Image_Patch(model_obj=model_obj, ds_weights_path=ds_weights_path)
+    #
+    # torch.manual_seed(20)
+    # ds_name_list = ['D2']
+    # batch_size = 4
+    # val_dataset = my_dataset(ds_name_list=ds_name_list, path_key='tiny_dataset', txt_name='val.txt')
+    # val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
+    #
+    # for batch_idx, data_dict in enumerate(val_loader):
+    #     images = data_dict['image']
+    #     ped_labels = data_dict['ped_label']
+    #
+    #     print(f'ped_labels: {ped_labels}')
+    #
+    #     test_obj.calc_cam(images)
+    #
+    #     break
 
 
 

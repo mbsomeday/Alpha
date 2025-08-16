@@ -1,7 +1,6 @@
 import argparse
 
-from data.dataset import my_dataset
-from training_template import DS_Classifier
+from training.training_template import DS_Classifier
 
 
 def get_opts():

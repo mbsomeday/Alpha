@@ -1,6 +1,6 @@
 import argparse, torch
 import os.path
-
+from tqdm import tqdm
 from torchcam.methods.gradient import GradCAM
 from torchcam.utils import overlay_mask
 from torch.utils.data import DataLoader
@@ -23,7 +23,7 @@ from utils.utils import load_model
 def get_opts():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--ds_name_list', nargs='+', default=['D3'])
+    parser.add_argument('--ds_name_list', nargs='+', default=['D1'])
     parser.add_argument('--txt_name', type=str, default='test.txt')
     parser.add_argument('--path_key', type=str, default='Stage6_org')
     parser.add_argument('--ds_model_obj', type=str, default='models.EfficientNet.efficientNetB0')
@@ -31,7 +31,8 @@ def get_opts():
     parser.add_argument('--isTrain', action='store_true')
 
     # test
-    parser.add_argument('--ds_weights_path', type=str, default=r'D:\my_phd\Model_Weights\Stage6\new_dataset\dsClsD1D2D3-08-1.09839.pth')
+    parser.add_argument('--ds_weights_path', type=str, default=r'/kaggle/input/stage6-weights-dscls/dsClsD1D2D3-08-1.09839.pth')    # kaggle
+    # parser.add_argument('--ds_weights_path', type=str, default=r'D:\my_phd\Model_Weights\Stage6\new_dataset\dsClsD1D2D3-08-1.09839.pth')    # local
     parser.add_argument('--test_batch_size', type=int, default=32)
     parser.add_argument('--test_txt_name', type=str, default='test.txt')
 
@@ -54,11 +55,11 @@ ds_model = efficientNetB0(num_class=3)
 ds_model = load_model(ds_model, opts.ds_weights_path).eval()
 
 # 行人分类 model
-ped_model = efficientNetB0(num_class=2)
-ped_model = load_model(ped_model, weights_path=r'D:\my_phd\Model_Weights\Stage6\new_dataset\baselines\D1\efficientNetB0_D1_3_Baseline-18-4.63655.pth').eval()
+# ped_model = efficientNetB0(num_class=2)
+# ped_model = load_model(ped_model, weights_path=r'D:\my_phd\Model_Weights\Stage6\new_dataset\baselines\D1\efficientNetB0_D1_3_Baseline-18-4.63655.pth').eval()     # local
 
 # model 变量
-model = ped_model
+model = ds_model
 
 # cam
 cam_extractor = GradCAM(model, target_layer='features.8.2')
@@ -85,7 +86,7 @@ def get_camAndMask(preds, logits):
 
 
 def func_1():
-    for idx, data_dict in enumerate(get_loader):
+    for idx, data_dict in enumerate(tqdm(get_loader)):
         print(data_dict.keys())
         images = data_dict['image']
         ped_labels = data_dict['ped_label']
@@ -99,7 +100,7 @@ def func_1():
         print('-' * 50)
         print(f'preds: {preds}, \nlogits: {logits}, probs: {F.softmax(logits, 1)}')
 
-        # 批量化操作
+        # ---------- 批量化操作 ----------
 
         # 获取cam和mask
         resized_cams, masks = get_camAndMask(preds, logits)
@@ -158,7 +159,7 @@ def func_1():
         # print('-' * 50)
         # print(f'masked preds 02: {masked_preds_02}, \nlogits: {masked_logits_02}, probs: {F.softmax(masked_logits_02, 1)}')
 
-        print()
+        # print()
 
         # # blur masked 区域
         # blurred_image = blur_transformer(images[0])
@@ -220,7 +221,7 @@ def func_1():
         # plt.show()
 
 
-        break
+        # break
 
 
 

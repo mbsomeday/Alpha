@@ -48,7 +48,7 @@ torch.manual_seed(3)
 
 # data
 get_dataset = my_dataset(ds_name_list=opts.ds_name_list, path_key=opts.path_key, txt_name=opts.txt_name)
-get_loader = DataLoader(get_dataset, batch_size=4, shuffle=True)
+get_loader = DataLoader(get_dataset, batch_size=opts.test_batch_size, shuffle=True)
 
 # model
 ds_model = efficientNetB0(num_class=3)

@@ -36,7 +36,7 @@ def get_opts():
     parser.add_argument('--test_batch_size', type=int, default=32)
     parser.add_argument('--test_txt_name', type=str, default='test.txt')
 
-    parser.add_argument('--save_dir', type=str, default='D:\my_phd\on_git\DatasetBias\save_test')
+    parser.add_argument('--save_dir', type=str, default='/kaggle/working/blackMask_D1')
 
     opts = parser.parse_args()
     return opts

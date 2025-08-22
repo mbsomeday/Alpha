@@ -87,18 +87,18 @@ def get_camAndMask(preds, logits):
 
 def func_1():
     for idx, data_dict in enumerate(tqdm(get_loader)):
-        print(data_dict.keys())
+        # print(data_dict.keys())
         images = data_dict['image']
         ped_labels = data_dict['ped_label']
         ds_labels = data_dict['ds_label']
         image_names = data_dict['img_name']
 
-        print(f'********** Ped label:{ped_labels}, ds_labels:{ds_labels} **********')
+        # print(f'********** Ped label:{ped_labels}, ds_labels:{ds_labels} **********')
 
         logits = model(images)
         preds = torch.argmax(logits, 1)
-        print('-' * 50)
-        print(f'preds: {preds}, \nlogits: {logits}, probs: {F.softmax(logits, 1)}')
+        # print('-' * 50)
+        # print(f'preds: {preds}, \nlogits: {logits}, probs: {F.softmax(logits, 1)}')
 
         # ---------- 批量化操作 ----------
 

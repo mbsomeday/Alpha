@@ -16,7 +16,7 @@ from torchvision.utils import save_image
 # from torchvision.transforms.functional import normalize, resize, to_pil_image
 
 from data.dataset import my_dataset
-from training_template import DS_Classifier
+# from training_template import DS_Classifier
 from utils.utils import load_model
 
 

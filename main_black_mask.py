@@ -11,9 +11,9 @@ from torchvision import transforms
 import torchvision.transforms.functional as F_vision
 from torchvision.utils import save_image
 
-from PIL import Image
-import numpy as np
-from torchvision.transforms.functional import normalize, resize, to_pil_image
+# from PIL import Image
+# import numpy as np
+# from torchvision.transforms.functional import normalize, resize, to_pil_image
 
 from data.dataset import my_dataset
 from training_template import DS_Classifier

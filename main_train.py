@@ -49,6 +49,7 @@ def get_args():
     # test
     parser.add_argument('--ds_weights_path', type=str)
     parser.add_argument('--test_txt_name', type=str)
+    parser.add_argument('--test_batch_size', default=64)
 
 
     args = parser.parse_args()

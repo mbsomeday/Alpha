@@ -31,7 +31,9 @@ def get_opts():
     parser.add_argument('--isTrain', action='store_true')
 
     # test
-    parser.add_argument('--ds_weights_path', type=str, default=r'/kaggle/input/stage6-weights-dscls/dsClsD1D2D3-08-1.09839.pth')    # kaggle
+    parser.add_argument('--ds_weights_path', type=str, default=r'D:\chrom_download\dsClsD1D2D3-03-16.15992.pth')    # kaggle
+
+    # parser.add_argument('--ds_weights_path', type=str, default=r'/kaggle/input/stage6-weights-dscls/dsClsD1D2D3-08-1.09839.pth')    # kaggle
     # parser.add_argument('--ds_weights_path', type=str, default=r'D:\my_phd\Model_Weights\Stage6\new_dataset\dsClsD1D2D3-08-1.09839.pth')    # local
     parser.add_argument('--test_batch_size', type=int, default=32)
     parser.add_argument('--test_txt_name', type=str, default='test.txt')
@@ -235,12 +237,12 @@ if __name__ == '__main__':
     # # 创建全红图片
     # batch_size = 4
     # red_tensors = torch.zeros((batch_size, 3, 224, 224))
-    # # red_tensors[:, 0, :, :] = 1.0
-    #
+    # red_tensors[:, 0, :, :] = 1.0
+
     # # 查看图片
     # red_plt_image = plt_transformer(red_tensors[0])
     # red_plt_image.show()
-    #
+
     # red_logits = ds_model(red_tensors)
     # red_preds = torch.argmax(red_logits, 1)
     # print(f'red preds: {red_preds}, \nlogits: {red_logits}, probs: {F.softmax(red_logits, 1)}')

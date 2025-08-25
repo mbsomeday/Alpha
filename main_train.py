@@ -5,19 +5,58 @@ root_path = os.path.split(curPath)[0]
 sys.path.append(root_path)
 
 import argparse
-from training.training_template import ds_classifier
-
+# from training.training_template import ds_classifier
 
 
 '''
 训练ped classifier
 '''
-from training.training_template import Ped_Classifier
-from configs.pedCls_args import TrainArgs
+# from training.training_template import Ped_Classifier
+# from configs.pedCls_args import TrainArgs
+#
+# opts = TrainArgs().parse()
+# ped_cls = Ped_Classifier(opts=opts)
+# ped_cls.train()
 
-opts = TrainArgs().parse()
-ped_cls = Ped_Classifier(opts=opts)
-ped_cls.train()
+
+'''
+    训ds classifier
+'''
+
+from training_template import DS_Classifier
+
+def get_args():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--ds_model_obj', type=str, default='models.EfficientNet.efficientNetB0')
+    parser.add_argument('--isTrain', action='store_true')
+
+    parser.add_argument('--ds_labels', nargs='+', default=[2, 1, 0])
+    parser.add_argument('--ds_name_list', nargs='+', default=['D1', 'D2', 'D3'], help='dataset list')
+    parser.add_argument('--data_key', type=str, default='Stage6_org')
+    parser.add_argument('--train_batch_size', type=int, default=4)
+    parser.add_argument('--val_batch_size', type=int, default=4)
+
+    parser.add_argument('--base_lr', type=float, default=0.01)
+
+    # callbacks
+    parser.add_argument('--top_k', type=int, default=3)
+    parser.add_argument('--patience', type=int, default=10)
+
+    parser.add_argument('--max_epochs', type=int, default=150, help='max epochs for training')
+    parser.add_argument('--warmup_epochs', type=int, default=3)
+
+
+    args = parser.parse_args()
+
+    return args
+
+
+opts = get_args()
+
+my_ds_classifier = DS_Classifier(opts)
+my_ds_classifier.train()
+
 
 
 '''

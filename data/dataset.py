@@ -63,7 +63,7 @@ class RandomAug():
 
 
 class my_dataset(Dataset):
-    def __init__(self, ds_name_list, path_key, txt_name):
+    def __init__(self, ds_name_list, path_key, txt_name, ds_labels=None):
         '''
         :param ds_name_list:
         :param path_key: org_dataset
@@ -72,8 +72,11 @@ class my_dataset(Dataset):
         self.ds_name_list = ds_name_list
         self.ds_label_list = []
         self.path_key = path_key
-        for ds_name in ds_name_list:
-            self.ds_label_list.append(int(ds_name[1]) - 1)
+        if ds_labels is None:
+            for ds_name in ds_name_list:
+                self.ds_label_list.append(int(ds_name[1]) - 1)
+        else:
+            self.ds_label_list = ds_labels
 
         self.txt_name = txt_name
         self.img_transforms = transforms.Compose([

@@ -776,7 +776,7 @@ class DS_Classifier():
         self.ds_model = load_model(self.ds_model, self.opts.ds_weights_path)
         self.ds_model.eval()
 
-        test_dataset = my_dataset(self.opts.ds_name_list, path_key=self.opts.path_key, txt_name=self.opts.test_txt_name)
+        test_dataset = my_dataset(self.opts.ds_name_list, path_key=self.opts.path_key, txt_name=self.opts.test_txt_name, ds_labels=self.opts.ds_labels)
         test_loader = DataLoader(test_dataset, batch_size=self.opts.test_batch_size, shuffle=False)
 
         test_correct_num = 0

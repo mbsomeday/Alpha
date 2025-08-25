@@ -23,7 +23,7 @@ import argparse
     训ds classifier
 '''
 
-from training_template import DS_Classifier
+from training.training_template import DS_Classifier
 
 def get_args():
     parser = argparse.ArgumentParser()

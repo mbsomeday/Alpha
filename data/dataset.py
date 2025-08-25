@@ -340,14 +340,40 @@ class dataset_clip(Dataset):
 
 
 
-if __name__ == '__main__':
-    get_dataset = operated_dsimages(ds_name_list=['D3'], txt_name_list=['augmentation_train.txt'], path_key='Stage6_org', operated_dir_name='layerCAM08_aug_train')
-    get_loader = DataLoader(get_dataset, batch_size=4, shuffle=False)
+class dataset_from_dir(Dataset):
+    '''
+        直接从文件夹中读取image
+        可以用于行人分类或者数据集分类
+    '''
+    def __init__(self, dir_path, label):
+        self.dir_path = dir_path
+        self.label = label
+        self.img_transforms = transforms.Compose([
+            transforms.ToTensor(),
+        ])
+        self.images = [os.path.join(self.dir_path, img_name) for img_name in os.listdir(self.dir_path)]
 
-    for idx, data in enumerate(get_loader):
-        print(data.keys())
+    def __len__(self):
+        return len(self.images)
 
-        break
+    def __getitem__(self, idx):
+        img_path = self.images[idx]
+
+        image = Image.open(img_path).convert('RGB')
+        image = self.img_transforms(image)
+        img_label = np.array(self.label).astype(np.int64)
+
+        image_dict = {
+            'image': image,
+            'label': img_label,
+        }
+
+        return image_dict
+
+
+
+
+
 
 
 

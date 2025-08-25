@@ -55,7 +55,9 @@ def get_args():
 opts = get_args()
 
 my_ds_classifier = DS_Classifier(opts)
-my_ds_classifier.train()
+# my_ds_classifier.train()
+
+my_ds_classifier.test()
 
 
 

@@ -11,8 +11,10 @@ class BaseArgs():
 
     def initialize(self, parser):
         """Define the common options that are used in both training and test."""
-        parser.add_argument('--ped_model_obj', type=str, default='models.EfficientNet.efficientNetB0')
+        parser.add_argument('--ds_model_obj', type=str, default='models.EfficientNet.efficientNetB0')
         parser.add_argument('--ds_name_list', nargs='+', default=['D1', 'D2', 'D3'], help='dataset list')
+        parser.add_argument('--ds_labels', nargs='+', default=[0, 1, 2])
+
         parser.add_argument('--batch_size', type=int, default=32)
         parser.add_argument('--data_key', type=str, default='Stage6_org')
         parser.add_argument('--isTrain', action='store_true')
@@ -52,7 +54,10 @@ class TestArgs(BaseArgs):
     def initialize(self, parser):
         parser = BaseArgs.initialize(self, parser)
 
-        parser.add_argument('--ped_weights_path', type=str, default=None)
+        parser.add_argument('--test_txt_name', type=str, default='test.txt')
+        parser.add_argument('--test_batch_size', type=int, default=32)
+        parser.add_argument('--ds_weights_path', type=str, default=r'D:\my_phd\Model_Weights\Stage6\new_dataset\dsClsD1D2D3-08-1.09839.pth')
+        # parser.add_argument('--ds_weights_path', type=str, default=r'D:\my_phd\Model_Weights\Stage6\new_dataset\reMapDatasetClassifierLabel\dsClsD1D2D3_210-40-0.32013.pth')
 
         return parser
 

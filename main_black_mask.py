@@ -243,8 +243,8 @@ if __name__ == '__main__':
     if opts.color == 'red':
         color_tensors[:, 0, :, :] = 1.0    # red
         print('红色图片')
-
-    print('黑色图片')
+    else:
+        print('黑色图片')
 
     # # 查看图片
     # red_plt_image = plt_transformer(color_tensors[0])

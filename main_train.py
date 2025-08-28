@@ -60,9 +60,29 @@ def get_args():
 opts = get_args()
 
 my_ds_classifier = DS_Classifier(opts)
-# my_ds_classifier.train()
+my_ds_classifier.train()
 
-my_ds_classifier.test()
+# my_ds_classifier.test()
+
+
+
+# import torch
+# from torch.utils.data import DataLoader
+# from data.dataset import my_dataset
+# torch.manual_seed(13)
+# get_dataset = my_dataset(ds_name_list=['D1', 'D2', 'D3'], path_key='Stage6_org', txt_name='test.txt', ds_labels=[2, 1, 0])
+# get_dataloader = DataLoader(get_dataset, batch_size=8, shuffle=True)
+#
+# for idx, data_dict in enumerate(get_dataloader):
+#     print(data_dict.keys())
+#
+#     img_paths = data_dict['img_path']
+#     ds_labels = data_dict['ds_label']
+#
+#     for jdx in range(len(img_paths)):
+#         print(f'{img_paths[jdx]} - {ds_labels[jdx]}')
+#
+#     break
 
 
 

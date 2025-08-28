@@ -628,14 +628,6 @@ class DS_Classifier():
             print(msg)
             info.append(msg)
 
-        # # 将本次实验的参数写入txt中
-        # write_to_txt = os.path.join(self.callback_save_path, 'Args.txt')
-        # if os.path.exists(write_to_txt):
-        #     os.remove(write_to_txt)
-        # with open(write_to_txt, 'a') as f:
-        #     for item in info:
-        #         f.write(item+'\n')
-
     def training_setup(self):
         # ********** 模型初始化 **********
         self.init_model(self.ds_model)

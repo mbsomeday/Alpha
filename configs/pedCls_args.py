@@ -13,7 +13,7 @@ class BaseArgs():
         parser.add_argument('--ped_model_obj', type=str, default='models.EfficientNet.efficientNetB0')
         parser.add_argument('--ds_name_list', nargs='+', default=['D3'], help='dataset list')
         parser.add_argument('--batch_size', type=int, default=32)
-        parser.add_argument('--data_key', type=str, default='tiny_dataset')
+        parser.add_argument('--data_key', type=str, default='Stage6_org')
         parser.add_argument('--isTrain', action='store_true')
         parser.add_argument('--rand_seed', type=int, default=3)
 
@@ -22,8 +22,9 @@ class BaseArgs():
 
 
     def parse(self):
+        parser = argparse.ArgumentParser()
+
         if not self.initialized:
-            parser = argparse.ArgumentParser()
             parser = self.initialize(parser)
 
         # get basic args

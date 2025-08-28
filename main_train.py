@@ -33,7 +33,7 @@ def get_args():
 
     parser.add_argument('--ds_labels', nargs='+', default=[2, 1, 0])
     parser.add_argument('--ds_name_list', nargs='+', default=['D1', 'D2', 'D3'], help='dataset list')
-    parser.add_argument('--path_key', type=str, default='Stage6_org')
+    parser.add_argument('--data_key', type=str, default='Stage6_org')
     parser.add_argument('--train_batch_size', type=int, default=4)
     parser.add_argument('--val_batch_size', type=int, default=4)
 

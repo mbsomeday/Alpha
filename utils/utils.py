@@ -352,7 +352,38 @@ def plot_two_model(txt1, txt2):
 
 
 
+def plot_cm(conf_matrix):
+    '''
+        将混淆矩阵绘制成图
+    '''
 
+    # 类别标签（如果没有特定标签，可以用数字代替）
+    class_names = ['D3(label:0)', 'D2(label:1)', 'D1(label:2)']
+
+    # 使用ConfusionMatrixDisplay绘制
+    disp = ConfusionMatrixDisplay(confusion_matrix=conf_matrix,
+                                  display_labels=class_names,
+                                  )
+    # 设置全局字体大小
+    plt.rcParams.update({'font.size': 14})
+
+    # 设置图形大小和显示参数
+    fig, ax = plt.subplots(figsize=(8, 6))
+    disp.plot(ax=ax, cmap='Blues', values_format='d')
+
+
+    # 标题及轴的设置
+    plt.title('Dataset Classifier CM (Mapping: 210)', fontdict={'size': 15})
+
+    plt.xlabel('Predicted', fontdict={'size': 15})
+    plt.ylabel('Label', fontdict={'size': 15})
+
+    plt.xticks(fontsize=12, fontweight='bold', color='r', )
+    plt.yticks(fontsize=12, fontweight='bold', color='r', rotation=45)
+
+    # 显示图形
+    plt.tight_layout()
+    plt.show()
 
 
 

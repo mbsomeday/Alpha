@@ -41,6 +41,8 @@ def get_opts():
 
     parser.add_argument('--save_dir', type=str, default='/kaggle/working/blackMask_D1')
 
+    parser.add_argument('--color', type=str, default='red')
+
     opts = parser.parse_args()
     return opts
 
@@ -238,7 +240,11 @@ if __name__ == '__main__':
     # 创建全红图片
     batch_size = 4
     color_tensors = torch.zeros((batch_size, 3, 224, 224))
-    color_tensors[:, 0, :, :] = 1.0    # red
+    if opts.color == 'red':
+        color_tensors[:, 0, :, :] = 1.0    # red
+        print('红色图片')
+
+    print('黑色图片')
 
     # # 查看图片
     # red_plt_image = plt_transformer(color_tensors[0])

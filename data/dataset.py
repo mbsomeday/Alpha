@@ -77,7 +77,7 @@ class my_dataset(Dataset):
         if ds_labels is None:
             for ds_name in ds_name_list:
                 self.ds_label_list.append(int(ds_name[1]) - 1)
-                print(f'Original dataset names and labels. D1, D2, D3: {self.ds_label_list}')
+            print(f'Original dataset names and labels. D1, D2, D3: {self.ds_label_list}')
         else:
             self.ds_label_list = ds_labels
             print(f'Re-mapping dataset names and labels. D1, D2, D3: {self.ds_label_list}')

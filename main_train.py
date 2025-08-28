@@ -46,10 +46,10 @@ def get_args():
     parser.add_argument('--max_epochs', type=int, default=150, help='max epochs for training')
     parser.add_argument('--warmup_epochs', type=int, default=3)
 
-    # test
-    parser.add_argument('--ds_weights_path', type=str)
-    parser.add_argument('--test_txt_name', type=str)
-    parser.add_argument('--test_batch_size', default=64)
+    # # test
+    # parser.add_argument('--ds_weights_path', type=str)
+    # parser.add_argument('--test_txt_name', type=str)
+    # parser.add_argument('--test_batch_size', default=64)
 
 
     args = parser.parse_args()

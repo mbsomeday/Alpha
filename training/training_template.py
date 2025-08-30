@@ -765,7 +765,7 @@ class DS_Classifier():
         '''
             在 new D1/D2/D3 的test.txt上测试，展示结果但不保存
         '''
-        self.ds_model = load_model(self.ds_model, self.opts.ds_weights_path)
+        # self.ds_model = load_model(self.ds_model, self.opts.ds_weights_path)
         self.ds_model.eval()
 
         test_dataset = my_dataset(self.opts.ds_name_list, path_key=self.opts.data_key, txt_name=self.opts.test_txt_name, ds_labels=self.opts.ds_labels)
